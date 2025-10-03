@@ -9,7 +9,8 @@
     "vscode": {
       "extensions": [
         "charliermarsh.ruff",
-        "njpwerner.autodocstring"
+        "njpwerner.autodocstring",
+        "formulahendry.code-runner"
       ]
     }
   }
