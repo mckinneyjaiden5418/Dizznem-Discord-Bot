@@ -1,10 +1,20 @@
 {
-  "python.analysis.typeCheckingMode": "standard",
+  "python.analysis.typeCheckingMode": "basic",
   "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportGeneralTypeIssues": "none",
+    "reportMissingImports": "none",
+    "reportUndefinedVariable": "none",
+    "reportUnusedVariable": "none",
+  },
   "python.analysis.useLibraryCodeForTypes": true,
   "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.inlayHints.functionReturnTypes": true,
+
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
-  "git.autorefresh": true
+
+  "git.autorefresh": true,
+  
+  "ruff.lint.extendSelect": ["ALL"]
 }
