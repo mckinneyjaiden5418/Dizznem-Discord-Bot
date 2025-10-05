@@ -10,8 +10,7 @@
     "vscode": {
       "extensions": [
         "charliermarsh.ruff",
-        "njpwerner.autodocstring",
-        "formulahendry.code-runner"
+        "njpwerner.autodocstring"
       ]
     }
   }
