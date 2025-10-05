@@ -5,6 +5,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+from log import log
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ def validate_env() -> bool:
     return not missing_vars
 
 
-def run_bot() -> None:
+def run_bot() -> None: # Move this to bot.py later.
     """Run discord bot."""
     token: str | None = os.getenv("DISCORD_BOT_TOKEN")
 
@@ -31,6 +32,7 @@ def run_bot() -> None:
 
 def main() -> None:
     """Start bot."""
+    log.debug("test")
     # Put logger info here later
     if not validate_env():
         return
@@ -42,8 +44,6 @@ def main() -> None:
     except Exception as e:  # noqa: F841, TRY203
         # Put logger info here later
         raise
-
-
 
 
 if __name__ == "__main__":

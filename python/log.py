@@ -1,0 +1,35 @@
+"""Logger setup."""
+
+import logging
+
+
+def set_up_logger(module_name: str) -> logging.Logger:
+    """Set up logger.
+
+    Args:
+        module_name (str): Name of module.
+
+    Returns:
+        logging.Logger: Logger.
+
+    """
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename="log.log",
+        filemode="w",
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
+    logger: logging.Logger = logging.getLogger(module_name)
+    logger.setLevel(logging.DEBUG)
+
+    console_handler: logging.StreamHandler[logging.TextIO] = logging.StreamHandler() # pyright: ignore[reportAttributeAccessIssue]
+    console_handler.setLevel(logging.INFO)
+    console_format = logging.Formatter("%(levelname)s: %(message)s")
+    console_handler.setFormatter(console_format)
+    logger.addHandler(console_handler)
+
+    return logger
+
+
+log: logging.Logger = set_up_logger(__name__)
