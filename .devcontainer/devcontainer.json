@@ -1,6 +1,7 @@
 {
 	"name": "Dizznem Bot",
 	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+  "postCreateCommand": "pip install -r requirements.txt",
 	"features": {
     "ghcr.io/devcontainers-extra/features/pylint:2": {}
   },
