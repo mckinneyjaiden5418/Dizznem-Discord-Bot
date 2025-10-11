@@ -14,7 +14,7 @@ def set_up_logger(module_name: str) -> logging.Logger:
     """
     logging.basicConfig(
         level=logging.DEBUG,
-        filename="log.log",
+        filename="dizznem_bot.log",
         filemode="w",
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
