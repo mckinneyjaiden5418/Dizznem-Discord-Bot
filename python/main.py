@@ -5,7 +5,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from log import log
+from log import logger
 
 load_dotenv()
 
@@ -14,7 +14,8 @@ def validate_env() -> bool:
     required_vars: list[str] = ["DISCORD_BOT_TOKEN"]
     missing_vars: list[str] = [var for var in required_vars if not os.getenv(var)]
 
-    # Put logger info here later
+    if missing_vars:
+        logger.error(f"Missing required environment variables: {', '.join(missing_vars)}")
     return not missing_vars
 
 
@@ -32,17 +33,14 @@ def run_bot() -> None: # Move this to bot.py later.
 
 def main() -> None:
     """Start bot."""
-    log.debug("test")
-    # Put logger info here later
+    logger.info("Starting Dizznem Bot...")
     if not validate_env():
         return
 
-    # Put logger info here later
-
     try:
         run_bot()
-    except Exception as e:  # noqa: F841, TRY203
-        # Put logger info here later
+    except Exception as e:
+        logger.error(f"Dizznem Bot failed to start: {e}")
         raise
 
 
