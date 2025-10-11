@@ -11,7 +11,6 @@ def set_up_logger(module_name: str) -> logging.Logger:
 
     Returns:
         logging.Logger: Logger.
-
     """
     logging.basicConfig(
         level=logging.DEBUG,
@@ -32,4 +31,4 @@ def set_up_logger(module_name: str) -> logging.Logger:
     return logger
 
 
-log: logging.Logger = set_up_logger(__name__)
+logger: logging.Logger = set_up_logger(__name__)
