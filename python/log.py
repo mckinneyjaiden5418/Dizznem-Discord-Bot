@@ -1,7 +1,6 @@
 """Logger setup."""
 
 import logging
-import os
 
 
 def set_up_logger(module_name: str) -> logging.Logger:
