@@ -1,6 +1,7 @@
 """Logger setup."""
 
 import logging
+import os
 
 
 def set_up_logger(module_name: str) -> logging.Logger:
@@ -12,18 +13,20 @@ def set_up_logger(module_name: str) -> logging.Logger:
     Returns:
         logging.Logger: Logger.
     """
+    is_debug_mode: bool = True
+
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.DEBUG if is_debug_mode else logging.INFO,
         filename="dizznem_bot.log",
         filemode="w",
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     logger: logging.Logger = logging.getLogger(module_name)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.DEBUG if is_debug_mode else logging.INFO)
 
     console_handler: logging.StreamHandler[logging.TextIO] = logging.StreamHandler() # pyright: ignore[reportAttributeAccessIssue]
-    console_handler.setLevel(logging.INFO)
+    console_handler.setLevel(logging.DEBUG if is_debug_mode else logging.INFO)
     console_format = logging.Formatter("%(levelname)s: %(message)s")
     console_handler.setFormatter(console_format)
     logger.addHandler(console_handler)
