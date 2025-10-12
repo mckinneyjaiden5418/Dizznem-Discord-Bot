@@ -17,6 +17,6 @@
   "git.autorefresh": true,
   
   "ruff.lint.extendSelect": ["ALL"],
-  "ruff.lint.ignore": ["D413", "ERA001"],
+  "ruff.lint.ignore": ["D401","D413", "ERA001"],
   "ruff.lineLength": 100
 }
