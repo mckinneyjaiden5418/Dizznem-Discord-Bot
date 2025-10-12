@@ -1,5 +1,6 @@
 """Main file for bot."""
 import os
+from pathlib import Path
 from typing import cast
 
 from discord import Intents, Message, TextChannel
@@ -20,6 +21,19 @@ class DizznemBot(commands.Bot):
         self.token: str = cast("str", os.getenv("DISCORD_BOT_TOKEN"))
         self.bot_tag: str = cast("str", os.getenv("DISCORD_BOT_TAG", "dizznem"))
         self.test_channel_id: int = int(cast("str", os.getenv("TEST_CHANNEL_ID", "0")))
+
+
+    async def setup_hook(self) -> None:
+        """Load all cogs."""
+        logger.info("Loading cogs...")
+        cogs_path: Path = Path(__file__).parent/"cogs"
+        for file in cogs_path.iterdir():
+            if file.is_file() and file.suffix == ".py" and not file.name.startswith("_"):
+                ext: str = f"bot.cogs.{file.stem}"
+                try:
+                    await self.load_extension(ext)
+                except FileNotFoundError as e:
+                    logger.error(f"Failed to load cog {ext}: {e}")
 
 
     async def on_ready(self) -> None:
