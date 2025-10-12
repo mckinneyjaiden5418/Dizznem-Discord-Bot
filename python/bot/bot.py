@@ -26,6 +26,7 @@ class DizznemBot(commands.Bot):
         """Bot startup."""
         channel: TextChannel = cast("TextChannel", self.get_channel(self.test_channel_id))
         await channel.send("Hello")
+        logger.info("Bot Started")
 
 
     async def on_message(self, message: Message) -> None:
