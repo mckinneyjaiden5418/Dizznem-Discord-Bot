@@ -1,7 +1,7 @@
 """Main."""
 import os
 
-from bot.bot import run_bot
+from bot.bot import DizznemBot
 from dotenv import load_dotenv
 from log import logger
 
@@ -28,7 +28,8 @@ def main() -> None:
         return
 
     try:
-        run_bot()
+        bot: DizznemBot = DizznemBot()
+        bot.run_bot()
     except Exception as e:
         logger.error(f"Dizznem Bot failed to start: {e}")
         raise
