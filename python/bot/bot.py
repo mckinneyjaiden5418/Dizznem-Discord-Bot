@@ -32,15 +32,16 @@ class DizznemBot(commands.Bot):
                 ext: str = f"bot.cogs.{file.stem}"
                 try:
                     await self.load_extension(ext)
+                    logger.info(f"Loaded cog {ext}.")
                 except FileNotFoundError as e:
-                    logger.error(f"Failed to load cog {ext}: {e}")
+                    logger.error(f"Failed to load cog {ext}: {e}.")
 
 
     async def on_ready(self) -> None:
         """Bot startup."""
         channel: TextChannel = cast("TextChannel", self.get_channel(self.test_channel_id))
         await channel.send("Hello")
-        logger.info("Bot Started")
+        logger.info("Bot started.")
 
 
     async def on_message(self, message: Message) -> None:
