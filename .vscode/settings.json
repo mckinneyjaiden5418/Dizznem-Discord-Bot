@@ -18,5 +18,10 @@
   
   "ruff.lint.extendSelect": ["ALL"],
   "ruff.lint.ignore": ["D401","D413", "ERA001"],
-  "ruff.lineLength": 100
+  "ruff.lineLength": 100,
+
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "editor.formatOnSave": true
 }

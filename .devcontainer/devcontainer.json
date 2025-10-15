@@ -9,9 +9,10 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "charliermarsh.ruff",
-        "njpwerner.autodocstring"
-      ]
+		"charliermarsh.ruff",
+		"njpwerner.autodocstring",
+		"ms-python.black-formatter"
+	]
     }
   }
 }
