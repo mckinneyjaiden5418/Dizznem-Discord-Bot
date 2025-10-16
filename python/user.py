@@ -62,7 +62,7 @@ class User:
         self.prestige: int = prestige
         self.level: int = level
         self.message_count: int = message_count
-        self.unsaved: bool = False
+        self.dirty: bool = False
 
 
     @classmethod
@@ -122,7 +122,7 @@ class User:
                 (self.name, self.money, self.prestige, self.level, self.message_count, self.id),
             )
             conn.commit()
-        self.unsaved = False
+        self.dirty = False
 
 
     def __repr__(self) -> str:
@@ -134,17 +134,17 @@ class User:
         return (
             f"<User id={self.id} name={self.name!r} "
             f"money={self.money} level={self.level} prestige={self.prestige} "
-            f"messages={self.message_count} unsaved={self.unsaved}>"
+            f"messages={self.message_count} unsaved={self.dirty}>"
         )
 
 
 async def autosave() -> None:
     """Periodically save all unsaved users to the database."""
     while True:
-        unsaved_users: list[User] = [u for u in USER_CACHE.values() if u.unsaved]
-        if unsaved_users:
+        dirty_users: list[User] = [u for u in USER_CACHE.values() if u.dirty]
+        if dirty_users:
             logger.debug("Saving unsaved users.")
-            for user in unsaved_users:
+            for user in dirty_users:
                 user.save()
         logger.debug("autosaved.")
         await asyncio.sleep(SAVE_INTERVAL)
