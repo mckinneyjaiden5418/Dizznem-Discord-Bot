@@ -1,6 +1,7 @@
 """User related code."""
 
 import asyncio
+import atexit
 import sqlite3
 from pathlib import Path
 from typing import Any, Self
@@ -162,3 +163,14 @@ async def autosave() -> None:
                 user.save()
         logger.debug("autosaved.")
         await asyncio.sleep(SAVE_INTERVAL)
+
+
+def save_all_users() -> None:
+    """Save all users to database when shutting down bot."""
+    for user in USER_CACHE.values():
+        if user.dirty:
+            user.save()
+    logger.info("All users saved.")
+
+
+atexit.register(save_all_users)
