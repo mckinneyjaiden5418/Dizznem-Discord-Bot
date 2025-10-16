@@ -4,6 +4,7 @@ import os
 from bot.bot import DizznemBot
 from dotenv import load_dotenv
 from log import logger
+from user import init_db
 
 load_dotenv()
 
@@ -26,6 +27,8 @@ def main() -> None:
     logger.info("Starting Dizznem Bot...")
     if not validate_env():
         return
+
+    init_db()
 
     try:
         bot: DizznemBot = DizznemBot()

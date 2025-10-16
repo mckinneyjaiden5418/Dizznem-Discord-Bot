@@ -6,6 +6,7 @@ from typing import cast
 from discord import Intents, Message, TextChannel
 from discord.ext import commands
 from log import logger
+from user import autosave
 
 
 class DizznemBot(commands.Bot):
@@ -24,7 +25,7 @@ class DizznemBot(commands.Bot):
 
 
     async def setup_hook(self) -> None:
-        """Load all cogs."""
+        """Load all cogs and start autosave for database."""
         logger.info("Loading cogs...")
         cogs_path: Path = Path(__file__).parent/"cogs"
         for file in cogs_path.iterdir():
@@ -35,6 +36,9 @@ class DizznemBot(commands.Bot):
                     logger.info(f"Loaded cog {ext}.")
                 except FileNotFoundError as e:
                     logger.error(f"Failed to load cog {ext}: {e}.")
+
+        self.loop.create_task(autosave())
+        logger.info("Autosave task started.")
 
 
     async def on_ready(self) -> None:

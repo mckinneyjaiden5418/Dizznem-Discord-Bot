@@ -1,5 +1,6 @@
 """User related code."""
 
+import asyncio
 import sqlite3
 from pathlib import Path
 from typing import Any, Self
@@ -7,6 +8,9 @@ from typing import Any, Self
 from log import logger
 
 DB_PATH: Path = Path("data/users.db")
+
+USER_CACHE: dict[int, "User"] = {}
+SAVE_INTERVAL: int = 60
 
 def init_db() -> None:
     """Initalize database if not done so already."""
@@ -58,6 +62,7 @@ class User:
         self.prestige: int = prestige
         self.level: int = level
         self.message_count: int = message_count
+        self.unsaved: bool = False
 
     @classmethod
     def from_db(cls, user_id: int) -> Self | None:
@@ -74,13 +79,12 @@ class User:
             row: Any = cursor.fetchone()
 
         if row is None:
-            logger.warning(f"User with ID {user_id} not found in database.")
             return None
 
         return cls(*row)
 
     @classmethod
-    def create_if_not_exists(cls, user_id: int, username: str) -> Self:
+    def create_if_not_exists(cls, user_id: int, username: str) -> "User":
         """Create a new user if they don't exist in the database.
 
         Args:
@@ -90,17 +94,54 @@ class User:
         Returns:
             User: The existing or newly created user instance.
         """
-        user: Self | None = cls.from_db(user_id)
-        if user:
-            return user
+        if user_id in USER_CACHE:
+            return USER_CACHE[user_id]
 
+        user: User | None = cls.from_db(user_id=user_id)
+        if user is None:
+            with sqlite3.connect(DB_PATH) as conn:
+                conn.execute("INSERT INTO users (id, name) VALUES (?, ?)", (user_id, username))
+                conn.commit()
+            user = cls.from_db(user_id)
+
+        USER_CACHE[user_id] = user # pyright: ignore[reportArgumentType]
+        return user # pyright: ignore[reportReturnType]
+
+
+    def save(self) -> None:
+        """Save user's current state to database."""
         with sqlite3.connect(DB_PATH) as conn:
             conn.execute(
-                "INSERT INTO users (id, name) VALUES (?, ?)", (user_id, username),
+                """
+                UPDATE users
+                SET name = ?, money = ?, prestige = ?, level = ?, message_count = ?
+                WHERE id = ?
+                """,
+                (self.name, self.money, self.prestige, self.level, self.message_count, self.id),
             )
             conn.commit()
-
-        logger.debug(f"New user created: {username} ({user_id})")
-        return cls.from_db(user_id) # pyright: ignore[reportReturnType]
+        self.unsaved = False
 
 
+    def __repr__(self) -> str:
+        """__repr__ for object.
+
+        Returns:
+            str: All user information.
+        """
+        return (
+            f"<User id={self.id} name={self.name!r} "
+            f"money={self.money} level={self.level} prestige={self.prestige} "
+            f"messages={self.message_count} unsaved={self.unsaved}>"
+        )
+
+async def autosave() -> None:
+    """Periodically save all unsaved users to the database."""
+    while True:
+        unsaved_users: list[User] = [u for u in USER_CACHE.values() if u.unsaved]
+        if unsaved_users:
+            logger.debug("Saving unsaved users.")
+            for user in unsaved_users:
+                user.save()
+        logger.debug("autosaved.")
+        await asyncio.sleep(SAVE_INTERVAL)
