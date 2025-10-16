@@ -56,6 +56,7 @@ class User:
             level (int): Current level.
             message_count (int): Number of messages sent.
         """
+        self._initialized: bool = False # This is so __setattr__ doesn't get triggered during init.
         self.id: int = id
         self.name: str = name
         self.money: float = money
@@ -63,6 +64,19 @@ class User:
         self.level: int = level
         self.message_count: int = message_count
         self.dirty: bool = False
+        self._initialized = True
+
+
+    def __setattr__(self, key: str, value: Any) -> None:
+        """Mark users as dirty whenever an attribute changes.
+
+        Args:
+            key (str): Attribute name being set.
+            value (Any): New value being assigned to attribute.
+        """
+        if getattr(self, "_initialized", False) and key not in {"dirty", "_initialized"}:
+            object.__setattr__(self, "dirty", True)
+        object.__setattr__(self, key, value)
 
 
     @classmethod
