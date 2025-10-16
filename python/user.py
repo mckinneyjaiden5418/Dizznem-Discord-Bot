@@ -64,6 +64,7 @@ class User:
         self.message_count: int = message_count
         self.unsaved: bool = False
 
+
     @classmethod
     def from_db(cls, user_id: int) -> Self | None:
         """Load a user from the database.
@@ -82,6 +83,7 @@ class User:
             return None
 
         return cls(*row)
+
 
     @classmethod
     def create_if_not_exists(cls, user_id: int, username: str) -> "User":
@@ -134,6 +136,7 @@ class User:
             f"money={self.money} level={self.level} prestige={self.prestige} "
             f"messages={self.message_count} unsaved={self.unsaved}>"
         )
+
 
 async def autosave() -> None:
     """Periodically save all unsaved users to the database."""
