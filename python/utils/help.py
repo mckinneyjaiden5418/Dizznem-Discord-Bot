@@ -1,4 +1,4 @@
-"""Help command stuff."""
+"""Help command util."""
 def get_help_text() -> str:
     """Get text for help command.
 
