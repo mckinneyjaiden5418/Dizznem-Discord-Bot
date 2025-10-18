@@ -161,7 +161,6 @@ async def autosave() -> None:
             logger.debug("Saving unsaved users.")
             for user in dirty_users:
                 user.save()
-        logger.debug("autosaved.")
         await asyncio.sleep(SAVE_INTERVAL)
 
 
