@@ -10,16 +10,19 @@
   "python.analysis.useLibraryCodeForTypes": true,
   "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.inlayHints.functionReturnTypes": true,
-
-  "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 1000,
-
+  "files.autoSave": "onWindowChange",
   "git.autorefresh": true,
-  
-  "ruff.lint.extendSelect": ["ALL"],
-  "ruff.lint.ignore": ["D401","D413", "ERA001", "PLR0913", "ANN401"],
+  "ruff.lint.extendSelect": [
+    "ALL"
+  ],
+  "ruff.lint.ignore": [
+    "D401",
+    "D413",
+    "ERA001",
+    "PLR0913",
+    "ANN401"
+  ],
   "ruff.lineLength": 100,
-
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
