@@ -25,7 +25,7 @@ class Misc(commands.Cog):
             ctx (commands.Context): Context.
         """
         help_text: str = get_help_text()
-        embed: Embed = Embed(title="Dizznem Bot Commands", color=Color.red(), description=help_text)
+        embed: Embed = Embed(title="Dizznem Bot Commands", color=Color.gold(), description=help_text)
         await ctx.send(embed=embed)
 
 
