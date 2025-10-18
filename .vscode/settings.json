@@ -10,7 +10,8 @@
   "python.analysis.useLibraryCodeForTypes": true,
   "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.inlayHints.functionReturnTypes": true,
-  "files.autoSave": "onWindowChange",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
   "git.autorefresh": true,
   "ruff.lint.extendSelect": [
     "ALL"
