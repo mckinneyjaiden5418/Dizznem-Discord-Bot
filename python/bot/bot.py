@@ -17,7 +17,7 @@ class DizznemBot(commands.Bot):
         intents: Intents = Intents.default()
         intents.message_content = True
 
-        super().__init__(command_prefix="$", intents=intents)
+        super().__init__(command_prefix="$", intents=intents, help_command=None)
 
         self.token: str = cast("str", os.getenv("DISCORD_BOT_TOKEN"))
         self.bot_tag: str = cast("str", os.getenv("DISCORD_BOT_TAG", "dizznem"))
