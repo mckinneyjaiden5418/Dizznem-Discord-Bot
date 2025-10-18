@@ -9,7 +9,7 @@ class Money(commands.Cog):
     """Money bot commands."""
 
     def __init__(self, bot: DizznemBot) -> None:
-        """Initiate Misc.
+        """Initiate Money.
 
         Args:
             bot (commands.Bot): Dizznem Bot.
@@ -19,7 +19,7 @@ class Money(commands.Cog):
 
     @commands.hybrid_command(name="balance", description="Get your balance",aliases=["bal"])
     async def balance(self, ctx: commands.Context) -> None:
-        """Get user balance.
+        """Balance command.
 
         Args:
             ctx (commands.Context): Context.
@@ -33,7 +33,7 @@ class Money(commands.Cog):
 
     @commands.hybrid_command(name="gamble", description="Gamble your money", aliases=["gamba"])
     async def gamble(self, ctx: commands.Context) -> None:
-        """Gamble money.
+        """Gamble command.
 
         Args:
             ctx (commands.Context): Context.
