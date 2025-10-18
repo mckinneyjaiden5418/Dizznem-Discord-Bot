@@ -17,7 +17,7 @@ class Money(commands.Cog):
         self.bot: commands.Bot= bot
 
 
-    @commands.hybrid_command(name="balance")
+    @commands.hybrid_command(name="balance", description="Get your balance",aliases=["bal"])
     async def balance(self, ctx: commands.Context) -> None:
         """Get user balance.
 
@@ -29,6 +29,15 @@ class Money(commands.Cog):
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
 
         logger.debug(user.money)
+
+
+    @commands.hybrid_command(name="gamble", description="Gamble your money", aliases=["gamba"])
+    async def gamble(self, ctx: commands.Context) -> None:
+        """Gamble money.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
 
 
 async def setup(bot: DizznemBot) -> None:
