@@ -1,4 +1,6 @@
 """Money util."""
+
+
 def format_money(money: float) -> str:
     """Format money.
 

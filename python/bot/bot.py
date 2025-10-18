@@ -1,4 +1,5 @@
 """Main file for bot."""
+
 import os
 from pathlib import Path
 from typing import cast
@@ -23,13 +24,16 @@ class DizznemBot(commands.Bot):
         self.bot_tag: str = cast("str", os.getenv("DISCORD_BOT_TAG", "dizznem"))
         self.test_channel_id: int = int(cast("str", os.getenv("TEST_CHANNEL_ID", "0")))
 
-
     async def setup_hook(self) -> None:
         """Load all cogs and start autosave for database."""
         logger.info("Loading cogs...")
-        cogs_path: Path = Path(__file__).parent/"cogs"
+        cogs_path: Path = Path(__file__).parent / "cogs"
         for file in cogs_path.iterdir():
-            if file.is_file() and file.suffix == ".py" and not file.name.startswith("_"):
+            if (
+                file.is_file()
+                and file.suffix == ".py"
+                and not file.name.startswith("_")
+            ):
                 ext: str = f"bot.cogs.{file.stem}"
                 try:
                     await self.load_extension(ext)
@@ -40,13 +44,14 @@ class DizznemBot(commands.Bot):
         self.loop.create_task(autosave())
         logger.info("Autosave task started.")
 
-
     async def on_ready(self) -> None:
         """Bot startup."""
-        channel: TextChannel = cast("TextChannel", self.get_channel(self.test_channel_id))
+        channel: TextChannel = cast(
+            "TextChannel",
+            self.get_channel(self.test_channel_id),
+        )
         await channel.send("Hello")
         logger.info("Bot started.")
-
 
     async def on_message(self, message: Message) -> None:
         """Handle message events.
@@ -70,7 +75,10 @@ class DizznemBot(commands.Bot):
             ("call", "Better Call Saul!"),
             # ("gay", "Dizznem Bot is an LGBTQ+ ally!"),  # Vaulted pride month command
             ("limit", "WE SAIYANS HAVE NO LIMITS!!!"),
-            ("super speed clicker", "https://www.roblox.com/games/139600379808227/Super-Speed-Clicker"),
+            (
+                "super speed clicker",
+                "https://www.roblox.com/games/139600379808227/Super-Speed-Clicker",
+            ),
         ]
 
         content: str = message.content.lower()
@@ -87,7 +95,6 @@ class DizznemBot(commands.Bot):
             break
 
         await self.process_commands(message)
-
 
     def run_bot(self) -> None:
         """Run bot."""

@@ -1,4 +1,5 @@
 """Miscellaneous bot commands."""
+
 from bot.bot import DizznemBot
 from discord import Color, Embed
 from discord.ext import commands
@@ -15,7 +16,7 @@ class Misc(commands.Cog):
         Args:
             bot (commands.Bot): Dizznem Bot.
         """
-        self.bot: commands.Bot= bot
+        self.bot: commands.Bot = bot
 
     @commands.hybrid_command(name="help", description="Get all Dizznem Bot commands")
     async def gamble(self, ctx: commands.Context) -> None:
@@ -25,7 +26,11 @@ class Misc(commands.Cog):
             ctx (commands.Context): Context.
         """
         help_text: str = get_help_text()
-        embed: Embed = Embed(title="Commands", color=Color.og_blurple(), description=help_text)
+        embed: Embed = Embed(
+            title="Commands",
+            color=Color.og_blurple(),
+            description=help_text,
+        )
         await ctx.send(embed=embed)
 
 

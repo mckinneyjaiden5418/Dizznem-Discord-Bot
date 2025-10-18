@@ -1,4 +1,5 @@
 """Main."""
+
 import os
 
 from bot.bot import DizznemBot
@@ -7,6 +8,7 @@ from log import logger
 from user import init_db
 
 load_dotenv()
+
 
 def validate_env() -> bool:
     """Validate if .env file has required variable(s).
@@ -18,7 +20,9 @@ def validate_env() -> bool:
     missing_vars: list[str] = [var for var in required_vars if not os.getenv(var)]
 
     if missing_vars:
-        logger.error(f"Missing required environment variables: {', '.join(missing_vars)}")
+        logger.error(
+            f"Missing required environment variables: {', '.join(missing_vars)}",
+        )
     return not missing_vars
 
 

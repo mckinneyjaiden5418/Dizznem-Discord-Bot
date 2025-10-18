@@ -20,7 +20,9 @@ class Money(commands.Cog):
         self.bot: commands.Bot = bot
 
     @commands.hybrid_command(
-        name="balance", description="Get your balance", aliases=["bal"],
+        name="balance",
+        description="Get your balance",
+        aliases=["bal"],
     )
     async def balance(self, ctx: commands.Context) -> None:
         """Balance command.
@@ -36,14 +38,18 @@ class Money(commands.Cog):
         user_money: str = format_money(user.money)
 
         embed: Embed = Embed(
-            title="Balance", color=Color.og_blurple(), description=f"${user_money}",
+            title="Balance",
+            color=Color.og_blurple(),
+            description=f"${user_money}",
         )
         embed.set_author(name=display_name, icon_url=avatar)
 
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(
-        name="gamble", description="Gamble your money", aliases=["gamba"],
+        name="gamble",
+        description="Gamble your money",
+        aliases=["gamba"],
     )
     async def gamble(self, ctx: commands.Context) -> None:
         """Gamble command.

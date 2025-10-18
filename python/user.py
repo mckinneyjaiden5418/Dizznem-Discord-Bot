@@ -13,6 +13,7 @@ DB_PATH: Path = Path("data/users.db")
 USER_CACHE: dict[int, "User"] = {}
 SAVE_INTERVAL: int = 60
 
+
 def init_db() -> None:
     """Initalize database if not done so already."""
     logger.info("Initiating database...")
@@ -57,7 +58,9 @@ class User:
             level (int): Current level.
             message_count (int): Number of messages sent.
         """
-        self._initialized: bool = False # This is so __setattr__ doesn't get triggered during init.
+        self._initialized: bool = (
+            False  # This is so __setattr__ doesn't get triggered during init.
+        )
         self.id: int = id
         self.name: str = name
         self.money: float = money
@@ -67,7 +70,6 @@ class User:
         self.dirty: bool = False
         self._initialized = True
 
-
     def __setattr__(self, key: str, value: Any) -> None:
         """Mark users as dirty whenever an attribute changes.
 
@@ -75,10 +77,12 @@ class User:
             key (str): Attribute name being set.
             value (Any): New value being assigned to attribute.
         """
-        if getattr(self, "_initialized", False) and key not in {"dirty", "_initialized"}:
+        if getattr(self, "_initialized", False) and key not in {
+            "dirty",
+            "_initialized",
+        }:
             object.__setattr__(self, "dirty", True)
         object.__setattr__(self, key, value)
-
 
     @classmethod
     def from_db(cls, user_id: int) -> Self | None:
@@ -91,14 +95,16 @@ class User:
             User | None: User instance if found, otherwise None.
         """
         with sqlite3.connect(DB_PATH) as conn:
-            cursor: sqlite3.Cursor = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+            cursor: sqlite3.Cursor = conn.execute(
+                "SELECT * FROM users WHERE id = ?",
+                (user_id,),
+            )
             row: Any = cursor.fetchone()
 
         if row is None:
             return None
 
         return cls(*row)
-
 
     @classmethod
     def create_if_not_exists(cls, user_id: int, username: str) -> "User":
@@ -117,13 +123,15 @@ class User:
         user: User | None = cls.from_db(user_id=user_id)
         if user is None:
             with sqlite3.connect(DB_PATH) as conn:
-                conn.execute("INSERT INTO users (id, name) VALUES (?, ?)", (user_id, username))
+                conn.execute(
+                    "INSERT INTO users (id, name) VALUES (?, ?)",
+                    (user_id, username),
+                )
                 conn.commit()
             user = cls.from_db(user_id)
 
-        USER_CACHE[user_id] = user # pyright: ignore[reportArgumentType]
-        return user # pyright: ignore[reportReturnType]
-
+        USER_CACHE[user_id] = user  # pyright: ignore[reportArgumentType]
+        return user  # pyright: ignore[reportReturnType]
 
     def save(self) -> None:
         """Save user's current state to database."""
@@ -134,11 +142,17 @@ class User:
                 SET name = ?, money = ?, prestige = ?, level = ?, message_count = ?
                 WHERE id = ?
                 """,
-                (self.name, self.money, self.prestige, self.level, self.message_count, self.id),
+                (
+                    self.name,
+                    self.money,
+                    self.prestige,
+                    self.level,
+                    self.message_count,
+                    self.id,
+                ),
             )
             conn.commit()
         self.dirty = False
-
 
     def __repr__(self) -> str:
         """__repr__ for object.

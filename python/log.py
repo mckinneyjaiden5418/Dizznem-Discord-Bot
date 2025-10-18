@@ -24,7 +24,9 @@ def set_up_logger(module_name: str) -> logging.Logger:
     logger: logging.Logger = logging.getLogger(module_name)
     logger.setLevel(logging.DEBUG if is_debug_mode else logging.INFO)
 
-    console_handler: logging.StreamHandler[logging.TextIO] = logging.StreamHandler() # pyright: ignore[reportAttributeAccessIssue]
+    console_handler: logging.StreamHandler[logging.TextIO] = ( # pyright: ignore[reportAttributeAccessIssue]
+        logging.StreamHandler()
+    )
     console_handler.setLevel(logging.DEBUG if is_debug_mode else logging.INFO)
     console_format = logging.Formatter("%(levelname)s: %(message)s")
     console_handler.setFormatter(console_format)
