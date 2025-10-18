@@ -1,7 +1,9 @@
 """Miscellaneous bot commands."""
 from bot.bot import DizznemBot
+from discord import Color, Embed
 from discord.ext import commands
 from log import logger  # noqa: F401
+from utils.help import get_help_text
 
 
 class Misc(commands.Cog):
@@ -14,6 +16,17 @@ class Misc(commands.Cog):
             bot (commands.Bot): Dizznem Bot.
         """
         self.bot: commands.Bot= bot
+
+    @commands.hybrid_command(name="help", description="Get all Dizznem Bot commands")
+    async def gamble(self, ctx: commands.Context) -> None:
+        """Help command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+        help_text: str = get_help_text()
+        embed: Embed = Embed(title="Dizznem Bot Commands", color=Color.red(), description=help_text)
+        await ctx.send(embed=embed)
 
 
 async def setup(bot: DizznemBot) -> None:
