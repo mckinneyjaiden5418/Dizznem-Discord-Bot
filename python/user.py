@@ -154,6 +154,14 @@ class User:
             conn.commit()
         self.dirty = False
 
+    def level_up_if_able(self) -> None:
+        """Level up user if they have required message count."""
+        required_messages: float = (
+            2 * (self.level**2) + (50 * self.level) + 100
+        )
+        if self.message_count >= required_messages:
+            self.level += 1
+
     def __repr__(self) -> str:
         """__repr__ for object.
 
