@@ -19,7 +19,7 @@ class Misc(commands.Cog):
         self.bot: commands.Bot = bot
 
     @commands.hybrid_command(name="help", description="Get all Dizznem Bot commands")
-    async def gamble(self, ctx: commands.Context) -> None:
+    async def help(self, ctx: commands.Context) -> None:
         """Help command.
 
         Args:
