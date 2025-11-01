@@ -7,7 +7,7 @@ from typing import cast
 from discord import Intents, Message, TextChannel
 from discord.ext import commands
 from log import logger
-from user import autosave
+from user import User, autosave
 
 
 class DizznemBot(commands.Bot):
@@ -62,7 +62,11 @@ class DizznemBot(commands.Bot):
         if message.author == self.user or message.author.bot:
             return
 
-        # Level feature here when added.
+        user_id: int = message.author.id
+        username: str = message.author.name
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        user.message_count += 1
+        user.level_up_if_able()
 
         triggers: list[tuple[str, str]] = [
             (self.bot_tag, ""),

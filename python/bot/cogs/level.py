@@ -1,43 +1,47 @@
-"""Miscellaneous bot commands."""
+"""Level bot commands."""
 
 from bot.bot import DizznemBot
 from discord import Color, Embed
 from discord.ext import commands
 from log import logger  # noqa: F401
-from utils.help import get_help_text
 
 
-class Misc(commands.Cog):
-    """Miscellaneous bot commands."""
+class Level(commands.Cog):
+    """Level bot commands."""
 
     def __init__(self, bot: DizznemBot) -> None:
-        """Initiate Misc.
+        """Initiate Level.
 
         Args:
             bot (commands.Bot): Dizznem Bot.
         """
         self.bot: commands.Bot = bot
 
-    @commands.hybrid_command(name="help", description="Get all Dizznem Bot commands")
-    async def help(self, ctx: commands.Context) -> None:
-        """Help command.
+    @commands.hybrid_command(
+        name="level",
+        description="Get your level and related information",
+        aliases=["lvl"],
+    )
+    async def level(self, ctx: commands.Context) -> None:
+        """Level command.
 
         Args:
             ctx (commands.Context): Context.
         """
-        help_text: str = get_help_text()
+        # finish the rest of this later.
+        level_information: str = "Placeholder"
         embed: Embed = Embed(
-            title="Commands",
+            title="Placeholder",
             color=Color.og_blurple(),
-            description=help_text,
+            description=level_information,
         )
         await ctx.send(embed=embed)
 
 
 async def setup(bot: DizznemBot) -> None:
-    """Setup for misc.
+    """Setup for level.
 
     Args:
         bot (commands.Bot): Dizznem Bot
     """
-    await bot.add_cog(Misc(bot))
+    await bot.add_cog(Level(bot))
