@@ -11,7 +11,8 @@
       "extensions": [
 		"charliermarsh.ruff",
 		"njpwerner.autodocstring",
-		"ms-python.black-formatter"
+		"ms-python.black-formatter",
+		"qwtel.sqlite-viewer"
 	]
     }
   }
