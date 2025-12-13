@@ -1,8 +1,9 @@
 """Level bot commands."""
 
 from bot.bot import DizznemBot
-from discord import Color, Embed
+from discord import Color, Embed, Member
 from discord.ext import commands
+from discord.user import User
 from log import logger  # noqa: F401
 from user import User
 from utils.numbers import format_number
@@ -24,14 +25,15 @@ class Level(commands.Cog):
         description="Get your level and related information",
         aliases=["lvl"],
     )
-    async def level(self, ctx: commands.Context) -> None:
+    async def level(self, ctx: commands.Context, member: Member | None = None) -> None:
         """Level command.
 
         Args:
             ctx (commands.Context): Context.
+            member (Member | None): Member if mentioned.
         """
-        user_id: int = ctx.author.id
-        username: str = ctx.author.name
+        user_id: int = member.id if member else ctx.author.id
+        username: str = member.name if member else ctx.author.name
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
 
         level: int = user.level
@@ -48,9 +50,13 @@ class Level(commands.Cog):
             title=f"{username}'s Level Stats",
             color=Color.og_blurple(),
         )
-        embed.set_thumbnail(url=ctx.author.display_avatar.url)
+        embed.set_thumbnail(
+            url=member.display_avatar.url if member else ctx.author.display_avatar.url,
+        )
         embed.add_field(
-            name="📈 Level", value=f"**{format_number(number=level)}**", inline=True,
+            name="📈 Level",
+            value=f"**{format_number(number=level)}**",
+            inline=True,
         )
         embed.add_field(
             name="💬 Messages",
