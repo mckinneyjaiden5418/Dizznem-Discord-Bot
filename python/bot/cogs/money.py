@@ -5,7 +5,7 @@ from discord import Asset, Color, Embed
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
-from utils.numbers import format_money
+from utils.numbers import format_number
 
 
 class Money(commands.Cog):
@@ -35,7 +35,7 @@ class Money(commands.Cog):
         display_name: str = ctx.author.display_name
         avatar: Asset | None = ctx.author.avatar
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
-        user_money: str = format_money(user.money)
+        user_money: str = format_number(number=user.money)
 
         embed: Embed = Embed(
             title="Balance",
