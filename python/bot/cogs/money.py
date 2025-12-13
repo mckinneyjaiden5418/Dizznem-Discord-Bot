@@ -5,7 +5,7 @@ from discord import Asset, Color, Embed
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
-from python.utils.numbers import format_money
+from utils.numbers import format_money
 
 
 class Money(commands.Cog):
