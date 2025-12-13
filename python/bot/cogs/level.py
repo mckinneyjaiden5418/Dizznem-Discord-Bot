@@ -34,6 +34,8 @@ class Level(commands.Cog):
         """
         user_id: int = member.id if member else ctx.author.id
         username: str = member.name if member else ctx.author.name
+        display_name: str = member.display_name if member else ctx.author.display_name
+        avatar_url: str = member.display_avatar.url if member else ctx.author.display_avatar.url
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
 
         level: int = user.level
@@ -47,11 +49,11 @@ class Level(commands.Cog):
         progress_bar: str = "█" * filled_blocks + "░" * empty_blocks
 
         embed: Embed = Embed(
-            title=f"{username}'s Level Stats",
+            title=f"{display_name}'s Level Stats",
             color=Color.og_blurple(),
         )
         embed.set_thumbnail(
-            url=member.display_avatar.url if member else ctx.author.display_avatar.url,
+            url=avatar_url,
         )
         embed.add_field(
             name="📈 Level",
