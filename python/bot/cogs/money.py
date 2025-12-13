@@ -47,6 +47,46 @@ class Money(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.hybrid_command(
+        name="give",
+        description="Give your money to another user",
+        aliases=["transfer"],
+    )
+    async def give(self, ctx: commands.Context, member: Member | None) -> None:
+        """Give command.
+
+        Args:
+            ctx (commands.Context): Context.
+            member (Member | None): Member if mentioned.
+        """
+        pass
+
+    @commands.hybrid_command(
+        name="networth",
+        description="Get your networth",
+    )
+    async def networth(self, ctx: commands.Context, member: Member | None) -> None:
+        """Networth command.
+
+        Args:
+            ctx (commands.Context): Context.
+            member (Member | None): Member if mentioned.
+        """
+        pass
+
+    @commands.hybrid_command(
+        name="store",
+        description="View the store",
+        aliases=["shop"],
+    )
+    async def store(self, ctx: commands.Context) -> None:
+        """Networth command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+        pass
+
 
 async def setup(bot: DizznemBot) -> None:
     """Setup for money.
