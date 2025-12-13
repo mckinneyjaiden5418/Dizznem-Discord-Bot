@@ -47,18 +47,6 @@ class Money(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(
-        name="gamble",
-        description="Gamble your money",
-        aliases=["gamba"],
-    )
-    async def gamble(self, ctx: commands.Context) -> None:
-        """Gamble command.
-
-        Args:
-            ctx (commands.Context): Context.
-        """
-
 
 async def setup(bot: DizznemBot) -> None:
     """Setup for money.
