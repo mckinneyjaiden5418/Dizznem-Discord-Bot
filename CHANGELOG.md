@@ -17,6 +17,8 @@
     - Level related data.
     - $inspiration database.
     - $count database.
+- Marvel Rivals tracker
+    - May get re-added in the future -- would've delayed release.
 
 ### Notes
 - Your level will start at 1. If you had a lot of messages on the old Dizznem Bot, you may level up rapidly for a bit until the bot syncs you to the correct level.
