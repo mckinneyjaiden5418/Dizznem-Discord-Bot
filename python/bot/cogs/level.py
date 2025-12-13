@@ -5,6 +5,7 @@ from discord import Color, Embed
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
+from utils.numbers import format_number
 
 
 class Level(commands.Cog):
@@ -48,11 +49,17 @@ class Level(commands.Cog):
             color=Color.og_blurple(),
         )
         embed.set_thumbnail(url=ctx.author.display_avatar.url)
-        embed.add_field(name="📈 Level", value=f"**{level}**", inline=True)
-        embed.add_field(name="💬 Messages", value=f"**{message_count}**", inline=True)
+        embed.add_field(
+            name="📈 Level", value=f"**{format_number(number=level)}**", inline=True,
+        )
+        embed.add_field(
+            name="💬 Messages",
+            value=f"**{format_number(number=message_count)}**",
+            inline=True,
+        )
         embed.add_field(
             name="🚀 Messages Required for Next Level",
-            value=f"**{int(required_messages)}**",
+            value=f"**{format_number(number=required_messages)}**",
             inline=False,
         )
         embed.add_field(
