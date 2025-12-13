@@ -1,7 +1,7 @@
 """Money bot commands."""
 
 from bot.bot import DizznemBot
-from discord import Asset, Color, Embed
+from discord import Asset, Color, Embed, Member
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
@@ -24,16 +24,17 @@ class Money(commands.Cog):
         description="Get your balance",
         aliases=["bal"],
     )
-    async def balance(self, ctx: commands.Context) -> None:
+    async def balance(self, ctx: commands.Context, member: Member | None) -> None:
         """Balance command.
 
         Args:
             ctx (commands.Context): Context.
+            member (Member | None): Member if mentioned.
         """
-        user_id: int = ctx.author.id
-        username: str = ctx.author.name
-        display_name: str = ctx.author.display_name
-        avatar: Asset | None = ctx.author.avatar
+        user_id: int = member.id if member else ctx.author.id
+        username: str = member.name if member else ctx.author.name
+        display_name: str = member.display_name if member else ctx.author.display_name
+        avatar: Asset | None = member.avatar if member else ctx.author.avatar
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
         user_money: str = format_number(number=user.money)
 
