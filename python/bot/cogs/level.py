@@ -3,7 +3,6 @@
 from bot.bot import DizznemBot
 from discord import Color, Embed, Member
 from discord.ext import commands
-from discord.user import User
 from log import logger  # noqa: F401
 from user import User
 from utils.numbers import format_number
