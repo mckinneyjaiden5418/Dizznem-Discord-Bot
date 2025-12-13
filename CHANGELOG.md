@@ -6,9 +6,11 @@
 
 ### Changed
 - All output replaced with embeds with small exceptions such as AI responses.
+- New XP formula.
+- The way some cooldowns work.
 
 ### Fixed
-- Placeholder
+- Possible sources of data loss.
 
 ### Removed
 - All data reset except for...
