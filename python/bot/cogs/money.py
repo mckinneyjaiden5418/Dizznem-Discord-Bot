@@ -152,7 +152,7 @@ class Money(commands.Cog):
             ctx (commands.Context): Context.
             member (Member | None): Member if mentioned.
         """
-        pass
+        # Do this once stock feature is complete.
 
     @commands.hybrid_command(
         name="store",
@@ -160,12 +160,12 @@ class Money(commands.Cog):
         aliases=["shop"],
     )
     async def store(self, ctx: commands.Context) -> None:
-        """Networth command.
+        """Store command.
 
         Args:
             ctx (commands.Context): Context.
         """
-        pass
+        # Do later
 
 
 async def setup(bot: DizznemBot) -> None:
