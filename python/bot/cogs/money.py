@@ -5,7 +5,7 @@ from discord import Asset, Color, Embed, Member
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
-from utils.numbers import format_number
+from utils.numbers import convert_money_str, format_number
 
 
 class Money(commands.Cog):
@@ -52,14 +52,94 @@ class Money(commands.Cog):
         description="Give your money to another user",
         aliases=["transfer"],
     )
-    async def give(self, ctx: commands.Context, member: Member | None) -> None:
+    async def give(
+        self, ctx: commands.Context, member: Member | None, amount: float | str,
+    ) -> None:
         """Give command.
 
         Args:
             ctx (commands.Context): Context.
             member (Member | None): Member if mentioned.
+            amount (float | str): Amount to give.
         """
-        pass
+        if member is None:
+            embed: Embed = Embed(
+                title="Error",
+                color=Color.red(),
+                description="No user was mentioned.",
+            )
+            await ctx.send(embed=embed)
+            return
+
+        try:
+            amount = (
+                convert_money_str(amount) if isinstance(amount, str) else float(amount)
+            )
+        except ValueError:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="Invalid amount format.",
+                ),
+            )
+            return
+
+        if amount <= 0:
+            embed: Embed = Embed(
+                title="Error",
+                color=Color.red(),
+                description="Amount must be greater than 0.",
+            )
+            await ctx.send(embed=embed)
+            return
+
+        if member.id == ctx.author.id:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="You cannot give money to yourself.",
+                ),
+            )
+            return
+
+        formatted_amount: str = format_number(number=amount)
+        sender_id: int = ctx.author.id
+        sender_username: str = ctx.author.name
+        recipient_id: int = member.id
+        recipient_username: str = member.name
+        recipient_display_name: str = member.display_name
+
+        sender_user: User = User.create_if_not_exists(
+            user_id=sender_id,
+            username=sender_username,
+        )
+
+        if sender_user.money < amount:
+            embed: Embed = Embed(
+                title="Error",
+                color=Color.red(),
+                description="Invalid amount, you do not have enough money to send.",
+            )
+            await ctx.send(embed=embed)
+            return
+
+        recipient_user: User = User.create_if_not_exists(
+            user_id=recipient_id,
+            username=recipient_username,
+        )
+
+        recipient_user.money += amount
+        sender_user.money -= amount
+
+        embed: Embed = Embed(
+            title="Success",
+            color=Color.green(),
+            description=f"Successfully gave {recipient_display_name} ${formatted_amount}",
+        )
+
+        await ctx.send(embed=embed)
 
     @commands.hybrid_command(
         name="networth",
