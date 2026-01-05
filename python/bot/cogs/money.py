@@ -80,7 +80,7 @@ class Money(commands.Cog):
                 embed=Embed(
                     title="Error",
                     color=Color.red(),
-                    description="Invalid amount format.",
+                    description="Invalid money format.",
                 ),
             )
             return
