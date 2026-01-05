@@ -71,6 +71,19 @@ class DizznemBot(commands.Bot):
 
         error = getattr(error, "original", error)
 
+        if (
+            isinstance(
+                error,
+                (
+                    commands.BadArgument,
+                    commands.MissingRequiredArgument,
+                    commands.UserInputError,
+                ),
+            )
+            and ctx.command
+        ):
+            ctx.command.reset_cooldown(ctx)
+
         if isinstance(error, commands.CommandOnCooldown):
             # Add formatting for minutes, hours, days, etc. later
             embed = Embed(
