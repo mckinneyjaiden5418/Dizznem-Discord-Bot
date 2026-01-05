@@ -53,14 +53,14 @@ class Money(commands.Cog):
         aliases=["transfer"],
     )
     async def give(
-        self, ctx: commands.Context, member: Member | None, amount: float | str,
+        self, ctx: commands.Context, member: Member | None, amount: str,
     ) -> None:
         """Give command.
 
         Args:
             ctx (commands.Context): Context.
             member (Member | None): Member if mentioned.
-            amount (float | str): Amount to give.
+            amount (str): Amount to give.
         """
         if member is None:
             embed: Embed = Embed(
@@ -72,9 +72,7 @@ class Money(commands.Cog):
             return
 
         try:
-            amount = (
-                convert_money_str(amount) if isinstance(amount, str) else float(amount)
-            )
+            amount_float: float = convert_money_str(money_str=amount)
         except ValueError:
             await ctx.send(
                 embed=Embed(
@@ -85,7 +83,7 @@ class Money(commands.Cog):
             )
             return
 
-        if amount <= 0:
+        if amount_float <= 0:
             embed: Embed = Embed(
                 title="Error",
                 color=Color.red(),
@@ -104,7 +102,7 @@ class Money(commands.Cog):
             )
             return
 
-        formatted_amount: str = format_number(number=amount)
+        formatted_amount: str = format_number(number=amount_float)
         sender_id: int = ctx.author.id
         sender_username: str = ctx.author.name
         recipient_id: int = member.id
@@ -116,11 +114,11 @@ class Money(commands.Cog):
             username=sender_username,
         )
 
-        if sender_user.money < amount:
+        if sender_user.money < amount_float:
             embed: Embed = Embed(
                 title="Error",
                 color=Color.red(),
-                description="Invalid amount, you do not have enough money to send.",
+                description="You do not have enough money to send this amount.",
             )
             await ctx.send(embed=embed)
             return
@@ -130,8 +128,8 @@ class Money(commands.Cog):
             username=recipient_username,
         )
 
-        recipient_user.money += amount
-        sender_user.money -= amount
+        recipient_user.money += amount_float
+        sender_user.money -= amount_float
 
         embed: Embed = Embed(
             title="Success",
