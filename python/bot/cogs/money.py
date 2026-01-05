@@ -53,24 +53,15 @@ class Money(commands.Cog):
         aliases=["transfer"],
     )
     async def give(
-        self, ctx: commands.Context, member: Member | None, amount: str,
+        self, ctx: commands.Context, member: Member, amount: str,
     ) -> None:
         """Give command.
 
         Args:
             ctx (commands.Context): Context.
-            member (Member | None): Member if mentioned.
+            member (Member | None): Member to give money to.
             amount (str): Amount to give.
         """
-        if member is None:
-            embed: Embed = Embed(
-                title="Error",
-                color=Color.red(),
-                description="No user was mentioned.",
-            )
-            await ctx.send(embed=embed)
-            return
-
         try:
             amount_float: float = convert_money_str(money_str=amount)
         except ValueError:
