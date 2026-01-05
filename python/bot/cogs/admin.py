@@ -1,4 +1,10 @@
-"""Admin commands."""
+"""Admin commands.
+
+Quick note:
+I'm using discord IDs here to check for admin because I don't have admin in the discord server this
+bot is being used.
+
+"""
 
 from bot.bot import DizznemBot
 from discord import Color, Embed, Member
@@ -19,8 +25,12 @@ class Admin(commands.Cog):
         """
         self.bot: DizznemBot = bot
 
-    @commands.hybrid_command(name="setmoney", description="Set money for a user (admin command).")
-    async def set_money(self, ctx: commands.Context, member: Member, amount: str) -> None:
+    @commands.hybrid_command(
+        name="setmoney", description="Set money for a user (admin command).",
+    )
+    async def set_money(
+        self, ctx: commands.Context, member: Member, amount: str
+    ) -> None:
         """Set money for a user.
 
         Args:
