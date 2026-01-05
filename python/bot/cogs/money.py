@@ -54,6 +54,7 @@ class Money(commands.Cog):
         description="Give your money to another user",
         aliases=["transfer"],
     )
+    @commands.cooldown(rate=1, per=3600, type=commands.BucketType.user)
     async def give(
         self, ctx: commands.Context, member: Member, amount: str,
     ) -> None:
