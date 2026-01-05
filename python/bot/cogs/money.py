@@ -1,5 +1,7 @@
 """Money bot commands."""
 
+from typing import Literal
+
 from bot.bot import DizznemBot
 from discord import Asset, Color, Embed, Member
 from discord.ext import commands
@@ -79,6 +81,17 @@ class Money(commands.Cog):
                 title="Error",
                 color=Color.red(),
                 description="Amount must be greater than 0.",
+            )
+            await ctx.send(embed=embed)
+            return
+
+        max_transfer_amount: Literal[5_000_000] = 5_000_000
+
+        if amount_float > max_transfer_amount:
+            embed: Embed = Embed(
+                title="Error",
+                color=Color.red(),
+                description="Amount must be less than or equal to 5 Million.",
             )
             await ctx.send(embed=embed)
             return
