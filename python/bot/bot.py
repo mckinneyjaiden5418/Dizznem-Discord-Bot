@@ -24,7 +24,7 @@ class DizznemBot(commands.Bot):
         self.bot_tag: str = cast("str", os.getenv("DISCORD_BOT_TAG", "dizznem"))
         self.test_channel_id: int = int(cast("str", os.getenv("TEST_CHANNEL_ID", "0")))
         self.admin_id: int = int(
-            cast("str", os.getenv("ADMIN_ID", "222002830964162561"))
+            cast("str", os.getenv("ADMIN_ID", "222002830964162561")),
         )
 
     async def setup_hook(self) -> None:
