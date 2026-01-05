@@ -21,7 +21,8 @@
     "D413",
     "ERA001",
     "PLR0913",
-    "ANN401"
+    "ANN401",
+    "N806"
   ],
   "ruff.lineLength": 100,
   "[python]": {
