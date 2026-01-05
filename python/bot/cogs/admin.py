@@ -29,7 +29,7 @@ class Admin(commands.Cog):
         name="setmoney", description="Set money for a user (admin command).",
     )
     async def set_money(
-        self, ctx: commands.Context, member: Member, amount: str
+        self, ctx: commands.Context, member: Member, amount: str,
     ) -> None:
         """Set money for a user.
 
