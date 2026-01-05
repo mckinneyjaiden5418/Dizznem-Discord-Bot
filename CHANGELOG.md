@@ -8,6 +8,7 @@
 - All output replaced with embeds with small exceptions such as AI responses.
 - New XP formula.
 - The way some cooldowns work.
+- $give/transfer maximum transfer amount increased to $5,000,000.
 
 ### Fixed
 - Possible sources of data loss.
