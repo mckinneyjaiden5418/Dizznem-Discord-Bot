@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import cast
 
-from discord import Intents, Message, TextChannel
+from discord import Color, Embed, Intents, Message, TextChannel
 from discord.ext import commands
 from log import logger
 from user import User, autosave
@@ -23,7 +23,9 @@ class DizznemBot(commands.Bot):
         self.token: str = cast("str", os.getenv("DISCORD_BOT_TOKEN"))
         self.bot_tag: str = cast("str", os.getenv("DISCORD_BOT_TAG", "dizznem"))
         self.test_channel_id: int = int(cast("str", os.getenv("TEST_CHANNEL_ID", "0")))
-        self.admin_id: int = int(cast("str", os.getenv("ADMIN_ID", "222002830964162561")))
+        self.admin_id: int = int(
+            cast("str", os.getenv("ADMIN_ID", "222002830964162561"))
+        )
 
     async def setup_hook(self) -> None:
         """Load all cogs and start autosave for database."""
@@ -53,6 +55,58 @@ class DizznemBot(commands.Bot):
         )
         await channel.send("Hello")
         logger.info("Bot started.")
+
+    async def on_command_error(self, ctx: commands.Context, error: Exception) -> None:
+        """Command error messages.
+
+        Args:
+            ctx (commands.Context): Context.
+            error (Exception): The error.
+
+        Raises:
+            error: Any unexpected error.
+        """
+        if ctx.command and hasattr(ctx.command, "on_error"):
+            return
+
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.CommandOnCooldown):
+            # Add formatting for minutes, hours, days, etc. later
+            embed = Embed(
+                title="Cooldown",
+                color=Color.orange(),
+                description=(f"Try again in **{error.retry_after:.1f} seconds**."),
+            )
+
+        elif isinstance(error, commands.MissingRequiredArgument):
+            embed = Embed(
+                title="Missing Argument",
+                color=Color.red(),
+                description=f"Missing argument: `{error.param.name}`",
+            )
+
+        elif isinstance(error, commands.BadArgument):
+            embed = Embed(
+                title="Invalid Argument",
+                color=Color.red(),
+                description="One or more arguments are invalid.",
+            )
+
+        elif isinstance(error, commands.MissingPermissions):
+            embed = Embed(
+                title="Missing Permissions",
+                color=Color.red(),
+                description="You do not have permission to use this command.",
+            )
+
+        elif isinstance(error, commands.CommandNotFound):
+            return
+
+        else:
+            raise error
+
+        await ctx.send(embed=embed)
 
     async def on_message(self, message: Message) -> None:
         """Handle message events.
