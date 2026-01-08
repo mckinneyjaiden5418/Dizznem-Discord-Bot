@@ -1,8 +1,14 @@
 """Money bot commands."""
 
+import random
+from typing import Final
+
 from bot.bot import DizznemBot
+from discord import Color, Embed
 from discord.ext import commands
 from log import logger  # noqa: F401
+from user import User
+from utils.numbers import format_number
 
 
 class MoneyMaking(commands.Cog):
@@ -15,6 +21,35 @@ class MoneyMaking(commands.Cog):
             bot (commands.Bot): Dizznem Bot.
         """
         self.bot: commands.Bot = bot
+
+    @commands.hybrid_command(
+        name="daily",
+        description="Daily money",
+    )
+    @commands.cooldown(rate=1, per=86400, type=commands.BucketType.user)
+    async def daily(self, ctx: commands.Context) -> None:
+        """Daily command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+        user_id: int = ctx.author.id
+        username: str = ctx.author.name
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        daily_value: int = random.randint(100_000, 1_000_000) * (  # noqa: S311
+            user.prestige + 1
+        )
+        formatted_daily_value: str = format_number(number=daily_value)
+
+        user.money += daily_value
+
+        embed: Embed = Embed(
+            title="Daily",
+            color=Color.green(),
+            description=f"You earned ${formatted_daily_value}",
+        )
+
+        await ctx.send(embed=embed)
 
     @commands.hybrid_command(
         name="gamble",
