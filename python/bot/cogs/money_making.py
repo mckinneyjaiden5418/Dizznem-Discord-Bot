@@ -182,7 +182,6 @@ class MoneyMaking(commands.Cog):
         await ctx.send(embed=embed)
 
 
-
 async def setup(bot: DizznemBot) -> None:
     """Setup for money making.
 
