@@ -22,6 +22,9 @@ class MoneyMaking(commands.Cog):
         """
         self.bot: commands.Bot = bot
 
+    # NOTE: Could probably refactor daily and weekly command to use 1 function as a way to prevent
+    # redundant code.
+
     @commands.hybrid_command(
         name="daily",
         description="Daily money",
@@ -47,6 +50,35 @@ class MoneyMaking(commands.Cog):
             title="Daily",
             color=Color.green(),
             description=f"You earned ${formatted_daily_value}",
+        )
+
+        await ctx.send(embed=embed)
+
+    @commands.hybrid_command(
+        name="weekly",
+        description="Weekly money",
+    )
+    @commands.cooldown(rate=1, per=604800, type=commands.BucketType.user)
+    async def weekly(self, ctx: commands.Context) -> None:
+        """Weekly command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+        user_id: int = ctx.author.id
+        username: str = ctx.author.name
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        weekly_value: int = random.randint(1_000_000, 5_000_000) * (  # noqa: S311
+            user.prestige + 1
+        )
+        formatted_weekly_value: str = format_number(number=weekly_value)
+
+        user.money += weekly_value
+
+        embed: Embed = Embed(
+            title="Weekly",
+            color=Color.green(),
+            description=f"You earned ${formatted_weekly_value}",
         )
 
         await ctx.send(embed=embed)
