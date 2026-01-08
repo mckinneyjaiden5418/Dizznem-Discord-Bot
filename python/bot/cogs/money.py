@@ -69,7 +69,7 @@ class Money(commands.Cog):
         try:
             amount_float: float = convert_money_str(money_str=amount)
         except ValueError:
-            reset_cd(ctx)
+            reset_cd(ctx=ctx)
             await ctx.send(
                 embed=Embed(
                     title="Error",
@@ -80,7 +80,7 @@ class Money(commands.Cog):
             return
 
         if amount_float <= 0:
-            reset_cd(ctx)
+            reset_cd(ctx=ctx)
             embed: Embed = Embed(
                 title="Error",
                 color=Color.red(),
@@ -92,7 +92,7 @@ class Money(commands.Cog):
         MAX_TRANSFER_AMOUNT: Final[int] = 5_000_000
 
         if amount_float > MAX_TRANSFER_AMOUNT:
-            reset_cd(ctx)
+            reset_cd(ctx=ctx)
             embed: Embed = Embed(
                 title="Error",
                 color=Color.red(),
@@ -102,7 +102,7 @@ class Money(commands.Cog):
             return
 
         if member.id == ctx.author.id:
-            reset_cd(ctx)
+            reset_cd(ctx=ctx)
             await ctx.send(
                 embed=Embed(
                     title="Error",
@@ -125,7 +125,7 @@ class Money(commands.Cog):
         )
 
         if sender_user.money < amount_float:
-            reset_cd(ctx)
+            reset_cd(ctx=ctx)
             embed: Embed = Embed(
                 title="Error",
                 color=Color.red(),
