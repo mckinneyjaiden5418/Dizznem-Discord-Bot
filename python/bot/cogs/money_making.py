@@ -1,7 +1,6 @@
 """Money bot commands."""
 
 import random
-from typing import Final
 
 from bot.bot import DizznemBot
 from discord import Color, Embed
