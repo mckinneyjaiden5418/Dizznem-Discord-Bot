@@ -181,6 +181,45 @@ class MoneyMaking(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.hybrid_command(
+        name="aba",
+        description="Anime Battle Arena trivia for money",
+        aliases=["animebattlearena"],
+    )
+    @commands.cooldown(rate=1, per=60, type=commands.BucketType.user)
+    async def aba(self, ctx: commands.Context) -> None:
+        """ABA command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+
+    @commands.hybrid_command(
+        name="rogue",
+        description="Rogue Lineage trivia for money",
+        aliases=["roguelineage"],
+    )
+    @commands.cooldown(rate=1, per=60, type=commands.BucketType.user)
+    async def rogue(self, ctx: commands.Context) -> None:
+        """Rogue command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+
+    @commands.hybrid_command(
+        name="trivia",
+        description="Trivia for money",
+        aliases=["roguelineage"],
+    )
+    @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
+    async def trivia(self, ctx: commands.Context) -> None:
+        """Trivia command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+
 
 async def setup(bot: DizznemBot) -> None:
     """Setup for money making.
