@@ -26,3 +26,7 @@
 
 ### Notes
 - Your level will start at 1. If you had a lot of messages on the old Dizznem Bot, you may level up rapidly for a bit until the bot syncs you to the correct level.
+
+## [1.0.0] - 2025-3-30
+### Added
+- Original Dizznem Bot release!
