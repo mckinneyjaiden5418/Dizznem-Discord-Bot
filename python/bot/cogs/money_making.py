@@ -210,7 +210,6 @@ class MoneyMaking(commands.Cog):
     @commands.hybrid_command(
         name="trivia",
         description="Trivia for money",
-        aliases=["roguelineage"],
     )
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
     async def trivia(self, ctx: commands.Context) -> None:
