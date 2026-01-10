@@ -77,6 +77,18 @@ class UserInfo(commands.Cog):
         embed.set_footer(text=f"User ID: {user_id}")
         await ctx.send(embed=embed)
 
+    @commands.hybrid_command(
+        name="profile",
+        description="Get your profile",
+    )
+    async def profile(self, ctx: commands.Context, member: Member | None = None) -> None:
+        """Profile command.
+
+        Args:
+            ctx (commands.Context): Context.
+            member (Member | None): Member if mentioned.
+        """
+
 
 async def setup(bot: DizznemBot) -> None:
     """Setup for UserInfo.
