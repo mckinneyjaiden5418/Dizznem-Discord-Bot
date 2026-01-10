@@ -1,4 +1,4 @@
-"""Level bot commands."""
+"""User info bot commands."""
 
 from bot.bot import DizznemBot
 from discord import Color, Embed, Member
@@ -8,11 +8,11 @@ from user import User
 from utils.numbers import format_number
 
 
-class Level(commands.Cog):
-    """Level bot commands."""
+class UserInfo(commands.Cog):
+    """User info bot commands."""
 
     def __init__(self, bot: DizznemBot) -> None:
-        """Initiate Level.
+        """Initiate UserInfo.
 
         Args:
             bot (commands.Bot): Dizznem Bot.
@@ -79,9 +79,9 @@ class Level(commands.Cog):
 
 
 async def setup(bot: DizznemBot) -> None:
-    """Setup for level.
+    """Setup for UserInfo.
 
     Args:
         bot (commands.Bot): Dizznem Bot
     """
-    await bot.add_cog(Level(bot))
+    await bot.add_cog(UserInfo(bot))
