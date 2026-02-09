@@ -26,7 +26,9 @@ def question(game: str) -> tuple[Path, str, str]:
         category = "character"
         question = "What character is this?"
 
-    category_path: Path = Path(__file__).parent.parent.parent.parent / "data" / "images" / category
+    category_path: Path = (
+        Path(__file__).parent.parent.parent.parent / "data" / "images" / category
+    )
     files: list[Path] = list(category_path.iterdir())
     image_path: Path = random.choice(files)  # noqa: S311
     answer: str = image_path.stem
