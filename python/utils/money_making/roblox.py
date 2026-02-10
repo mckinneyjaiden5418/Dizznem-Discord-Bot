@@ -24,7 +24,7 @@ def question(game: str) -> tuple[Path, str, str]:
         question: str = questions[category]
     elif game == "aba":
         category = "character"
-        question = "What character is this?"
+        question: str = "What character is this?"
 
     category_path: Path = (
         Path(__file__).parent.parent.parent.parent / "data" / "images" / category
