@@ -1,6 +1,7 @@
 """Money bot commands."""
 
 import random
+from pathlib import Path
 from typing import Final
 
 from bot.bot import DizznemBot
@@ -9,6 +10,7 @@ from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
 from utils.general import reset_cd
+from utils.money_making.roblox import check_answer, question
 from utils.numbers import convert_money_str, format_number
 
 
@@ -180,6 +182,15 @@ class MoneyMaking(commands.Cog):
             )
 
         await ctx.send(embed=embed)
+
+    async def run_roblox_trivia(self, ctx: commands.Context, game: str) -> None:
+        """Run Roblox trivia."""
+        image: Path
+        trivia_question: str
+        answer: str
+        image, trivia_question, answer = question(game=game)
+
+        # Finishing this later.
 
     @commands.hybrid_command(
         name="aba",
