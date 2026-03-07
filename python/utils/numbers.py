@@ -23,6 +23,9 @@ def convert_money_str(money_str: str) -> float:
     Returns:
         float: Valid float.
     """
+    if isinstance(money_str, (int, float)):
+        return money_str
+
     cleaned: str = money_str.replace("$", "").replace(",", "").strip()
 
     try:

@@ -1,17 +1,19 @@
 """Money bot commands."""
 
 import random
-from pathlib import Path
-from typing import Final
+from typing import TYPE_CHECKING, Final
 
 from bot.bot import DizznemBot
 from discord import Color, Embed, File
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
-from utils.general import reset_cd
+from utils.general import get_user_answer, reset_cd
 from utils.money_making.roblox import check_answer, question
 from utils.numbers import convert_money_str, format_number
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class MoneyMaking(commands.Cog):
@@ -192,13 +194,46 @@ class MoneyMaking(commands.Cog):
         image, trivia_question, answer = question(game=game)
 
         question_embed: Embed = Embed(
-            title=title, color=Color.og_blurple(), description=trivia_question,
+            title=title,
+            color=Color.og_blurple(),
+            description=trivia_question,
         )
 
         image_file: File = File(fp=image, filename="trivia.png")
         question_embed.set_image(url="attachment://trivia.png")
 
         await ctx.send(embed=question_embed, file=image_file)
+
+        user_answer: str | None = await get_user_answer(bot=self.bot, ctx=ctx, timeout=30)
+        if user_answer is None:
+            embed: Embed = Embed(
+                title="⏰ Time's Up!",
+                description=f"No answer was given.\n\nThe correct answer was **{answer}**.",
+                color=Color.red(),
+            )
+            await ctx.send(embed=embed)
+            return
+
+        user_id: int = ctx.author.id
+        username: str = ctx.author.name
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        earnings: int = random.randint(25000, 50000) * (user.prestige + 1)  # noqa: S311
+        if check_answer(answer=answer, user_answer=user_answer):
+            user.money += earnings
+            embed: Embed = Embed(
+                title="✅ Correct!",
+                description=f"You won {format_number(earnings)}!",
+                color=Color.green(),
+            )
+            await ctx.send(embed=embed)
+        else:
+            user.money -= earnings
+            embed: Embed = Embed(
+                title="❌ Incorrect",
+                description=f"You lost {format_number(earnings)}!\n\nThe answer was **{answer}**.",
+                color=Color.red(),
+            )
+            await ctx.send(embed=embed)
 
     @commands.hybrid_command(
         name="aba",
@@ -215,9 +250,9 @@ class MoneyMaking(commands.Cog):
         await self.run_roblox_trivia(ctx, "aba")
 
     @commands.hybrid_command(
-        name="rogue",
+        name="roguelineage",
         description="Rogue Lineage trivia for money",
-        aliases=["roguelineage"],
+        aliases=["rogue"],
     )
     @commands.cooldown(rate=1, per=60, type=commands.BucketType.user)
     async def rogue(self, ctx: commands.Context) -> None:
