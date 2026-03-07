@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Final
 
 from bot.bot import DizznemBot
-from discord import Color, Embed
+from discord import Color, Embed, File
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
@@ -188,9 +188,17 @@ class MoneyMaking(commands.Cog):
         image: Path
         trivia_question: str
         answer: str
+        title: str = "ABA Trivia" if game == "aba" else "Rogue Lineage Trivia"
         image, trivia_question, answer = question(game=game)
 
-        # Finishing this later.
+        question_embed: Embed = Embed(
+            title=title, color=Color.og_blurple(), description=trivia_question,
+        )
+
+        image_file: File = File(fp=image, filename="trivia.png")
+        question_embed.set_image(url="attachment://trivia.png")
+
+        await ctx.send(embed=question_embed, file=image_file)
 
     @commands.hybrid_command(
         name="aba",
@@ -204,6 +212,7 @@ class MoneyMaking(commands.Cog):
         Args:
             ctx (commands.Context): Context.
         """
+        await self.run_roblox_trivia(ctx, "aba")
 
     @commands.hybrid_command(
         name="rogue",
@@ -217,6 +226,7 @@ class MoneyMaking(commands.Cog):
         Args:
             ctx (commands.Context): Context.
         """
+        await self.run_roblox_trivia(ctx, "rogue")
 
     @commands.hybrid_command(
         name="trivia",
