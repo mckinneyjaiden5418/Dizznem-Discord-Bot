@@ -190,8 +190,13 @@ class MoneyMaking(commands.Cog):
         image: Path
         trivia_question: str
         answer: str
-        title: str = "ABA Trivia" if game == "aba" else "Rogue Lineage Trivia"
         image, trivia_question, answer = question(game=game)
+        title: str = "ABA Trivia" if game == "aba" else "Rogue Lineage Trivia"
+
+        user_id: int = ctx.author.id
+        username: str = ctx.author.name
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        earnings: int = random.randint(25000, 50000) * (user.prestige + 1)  # noqa: S311
 
         question_embed: Embed = Embed(
             title=title,
@@ -204,25 +209,25 @@ class MoneyMaking(commands.Cog):
 
         await ctx.send(embed=question_embed, file=image_file)
 
-        user_answer: str | None = await get_user_answer(bot=self.bot, ctx=ctx, timeout=30)
+        user_answer: str | None = await get_user_answer(
+            bot=self.bot,
+            ctx=ctx,
+        )
         if user_answer is None:
+            user.money -= earnings
             embed: Embed = Embed(
                 title="⏰ Time's Up!",
-                description=f"No answer was given.\n\nThe correct answer was **{answer}**.",
+                description=f"You lost $**{format_number(earnings)}!**\n\nThe correct answer was **{answer}**.",  # noqa: E501
                 color=Color.red(),
             )
             await ctx.send(embed=embed)
             return
 
-        user_id: int = ctx.author.id
-        username: str = ctx.author.name
-        user: User = User.create_if_not_exists(user_id=user_id, username=username)
-        earnings: int = random.randint(25000, 50000) * (user.prestige + 1)  # noqa: S311
         if check_answer(answer=answer, user_answer=user_answer):
             user.money += earnings
             embed: Embed = Embed(
                 title="✅ Correct!",
-                description=f"You won {format_number(earnings)}!",
+                description=f"You won **${format_number(earnings)}**!",
                 color=Color.green(),
             )
             await ctx.send(embed=embed)
@@ -230,7 +235,7 @@ class MoneyMaking(commands.Cog):
             user.money -= earnings
             embed: Embed = Embed(
                 title="❌ Incorrect",
-                description=f"You lost {format_number(earnings)}!\n\nThe answer was **{answer}**.",
+                description=f"""You lost **{format_number(earnings)}**!\n\nThe correct answer was **{answer}**.""",  # noqa: E501
                 color=Color.red(),
             )
             await ctx.send(embed=embed)
