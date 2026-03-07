@@ -25,7 +25,8 @@
     - Not needed anymore.
 
 ### Notes
-- Your level will start at 1. If you had a lot of messages on the old Dizznem Bot, you may level up rapidly for a bit until the bot syncs you to the correct level.
+- Your level will start at 1. If you had a lot of messages on Dizznem Bot 1.0.0, you may level up rapidly for a bit until the bot syncs you to the correct level.
+- User data that was not reset dates back to 11/21/25.
 
 ## [1.0.0] - 2025-3-30
 ### Added
