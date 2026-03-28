@@ -8,7 +8,8 @@ from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
 from utils.general import reset_cd
-from utils.numbers import convert_money_str, format_number
+from utils.money.stocks import USERS_DB_PATH
+from utils.numbers import convert_money_str, format_number, get_networth
 
 
 class Money(commands.Cog):
@@ -161,7 +162,25 @@ class Money(commands.Cog):
             ctx (commands.Context): Context.
             member (Member | None): Member if mentioned.
         """
-        # Do this once stock feature is complete.
+        user_id: int = member.id if member else ctx.author.id
+        username: str = member.name if member else ctx.author.name
+        display_name: str = member.display_name if member else ctx.author.display_name
+        avatar: Asset | None = member.avatar if member else ctx.author.avatar
+
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        total_networth: float = get_networth(user=user, db_path=USERS_DB_PATH)
+        stock_value: float = total_networth - user.money
+
+        embed: Embed = Embed(
+            title="Net Worth",
+            color=Color.og_blurple(),
+            description=f"${format_number(number=total_networth)}",
+        )
+        embed.add_field(name="Balance", value=f"${format_number(number=user.money)}", inline=True)
+        embed.add_field(name="Stocks", value=f"${format_number(number=stock_value)}", inline=True)
+        embed.set_author(name=display_name, icon_url=avatar)
+
+        await ctx.send(embed=embed)
 
     @commands.hybrid_command(
         name="store",
