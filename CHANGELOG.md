@@ -10,6 +10,9 @@
 - The way some cooldowns work.
 - $give/transfer maximum transfer amount increased to $5,000,000.
 - $weekly now gives you a random amount of money and has been nerfed, but scales with prestige now.
+- Stock market overhaul
+    - Stocks now point to real life stocks (no more +200% days for Subaru sorry).
+    - Some other changes I don't feel like typing out just check it out, the rest is self explanatory.
 
 ### Fixed
 - Possible sources of data loss.
