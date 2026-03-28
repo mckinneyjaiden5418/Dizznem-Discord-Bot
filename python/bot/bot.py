@@ -2,13 +2,15 @@
 
 import os
 from pathlib import Path
-from typing import List, cast
+from typing import TYPE_CHECKING, cast
 
 from discord import Color, Embed, Intents, Message, TextChannel
-from discord.app_commands.models import AppCommand
 from discord.ext import commands
 from log import logger
 from user import User, autosave
+
+if TYPE_CHECKING:
+    from discord.app_commands.models import AppCommand
 
 
 class DizznemBot(commands.Bot):
