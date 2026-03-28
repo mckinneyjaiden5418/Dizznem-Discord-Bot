@@ -2,9 +2,10 @@
 
 import os
 from pathlib import Path
-from typing import cast
+from typing import List, cast
 
 from discord import Color, Embed, Intents, Message, TextChannel
+from discord.app_commands.models import AppCommand
 from discord.ext import commands
 from log import logger
 from user import User, autosave
@@ -45,6 +46,13 @@ class DizznemBot(commands.Bot):
                 logger.debug(f"Cog {ext} does not have a setup function, skipping.")
             except (commands.ExtensionError, commands.ExtensionFailed) as e:
                 logger.error(f"Failed to load cog {ext}: {e}.")
+
+        try:
+            logger.info("Syncing slash commands...")
+            synced: list[AppCommand] = await self.tree.sync()
+            logger.info(f"Successfully synced {len(synced)} commands.")
+        except (commands.ExtensionError, OSError) as e:
+            logger.error(f"Failed to sync commands: {e}")
 
         self.loop.create_task(autosave())
         logger.info("Autosave task started.")
