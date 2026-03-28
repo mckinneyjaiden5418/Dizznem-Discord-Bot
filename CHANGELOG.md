@@ -13,6 +13,7 @@
 - Stock market overhaul
     - Stocks now point to real life stocks (no more +200% days for Subaru sorry).
         - If you find out what stock each stock is associated with I'll give you a reward.
+    - You can only buy whole shares, might change in the future, currently undecided.
     - To buy/sell stocks do $buystock {stock_name} or $sellstock {stock_name}.
     - I'll be able to add more stocks in the future very easily due to this overhaul, so yay!
     - Some other changes I don't feel like typing out just check it out, the rest is self explanatory.
