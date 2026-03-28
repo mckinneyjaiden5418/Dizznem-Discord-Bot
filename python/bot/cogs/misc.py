@@ -47,7 +47,7 @@ class Misc(commands.Cog):
         description="Get an inspirational quote",
     )
     async def inspiration(self, ctx: commands.Context) -> None:
-        """Get an inspirational quote.
+        """Inspiration command.
 
         Args:
             ctx (commands.Context): Context.
