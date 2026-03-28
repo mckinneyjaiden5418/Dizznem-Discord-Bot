@@ -12,7 +12,7 @@ DEFAULT_QUOTES: list[str] = [
 ]
 
 
-def ensure_db(db_path: Path) -> None:
+def ensure_inspiration_db(db_path: Path) -> None:
     """Create inspiration.db with default quotes if it doesn't exist.
 
     Args:
