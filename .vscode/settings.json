@@ -22,7 +22,8 @@
     "ERA001",
     "PLR0913",
     "ANN401",
-    "N806"
+    "N806",
+    "ASYNC240"
   ],
   "ruff.lineLength": 100,
   "[python]": {
