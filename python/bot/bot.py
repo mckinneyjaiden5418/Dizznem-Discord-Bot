@@ -35,7 +35,7 @@ class DizznemBot(commands.Bot):
             if file.name.startswith("_"):
                 continue
 
-            relative: Path = file.relative_to(Path(__file__).parent)
+            relative: Path = file.relative_to(Path(__file__).parent.parent)
             ext: str = ".".join(relative.with_suffix("").parts)
 
             try:
