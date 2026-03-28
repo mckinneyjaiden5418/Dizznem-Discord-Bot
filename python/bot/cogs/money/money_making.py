@@ -9,7 +9,7 @@ from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
 from utils.general import get_user_answer, reset_cd
-from utils.money_making.roblox import check_answer, question
+from utils.money.roblox import check_answer, question
 from utils.numbers import convert_money_str, format_number
 
 if TYPE_CHECKING:
