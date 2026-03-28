@@ -9,7 +9,7 @@ from log import logger  # noqa: F401
 from user import User
 from utils.general import reset_cd
 from utils.money.stocks import USERS_DB_PATH
-from utils.numbers import convert_money_str, format_number, get_networth
+from utils.numbers import convert_money_str, format_number, get_net_worth
 
 
 class Money(commands.Cog):
@@ -58,7 +58,10 @@ class Money(commands.Cog):
     )
     @commands.cooldown(rate=1, per=3600, type=commands.BucketType.user)
     async def give(
-        self, ctx: commands.Context, member: Member, amount: str,
+        self,
+        ctx: commands.Context,
+        member: Member,
+        amount: str,
     ) -> None:
         """Give command.
 
@@ -153,10 +156,10 @@ class Money(commands.Cog):
 
     @commands.hybrid_command(
         name="networth",
-        description="Get your networth",
+        description="Get your net worth",
     )
     async def networth(self, ctx: commands.Context, member: Member | None) -> None:
-        """Networth command.
+        """Net worth command.
 
         Args:
             ctx (commands.Context): Context.
@@ -168,7 +171,7 @@ class Money(commands.Cog):
         avatar: Asset | None = member.avatar if member else ctx.author.avatar
 
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
-        total_networth: float = get_networth(user=user, db_path=USERS_DB_PATH)
+        total_networth: float = get_net_worth(user=user, db_path=USERS_DB_PATH)
         stock_value: float = total_networth - user.money
 
         embed: Embed = Embed(
@@ -176,8 +179,12 @@ class Money(commands.Cog):
             color=Color.og_blurple(),
             description=f"${format_number(number=total_networth)}",
         )
-        embed.add_field(name="Balance", value=f"${format_number(number=user.money)}", inline=True)
-        embed.add_field(name="Stocks", value=f"${format_number(number=stock_value)}", inline=True)
+        embed.add_field(
+            name="Balance", value=f"${format_number(number=user.money)}", inline=True,
+        )
+        embed.add_field(
+            name="Stocks", value=f"${format_number(number=stock_value)}", inline=True,
+        )
         embed.set_author(name=display_name, icon_url=avatar)
 
         await ctx.send(embed=embed)

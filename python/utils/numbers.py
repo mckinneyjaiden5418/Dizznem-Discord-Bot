@@ -42,8 +42,8 @@ def convert_money_str(money_str: str) -> float:
     return value
 
 
-def get_networth(user: User, db_path: Path) -> float:
-    """Calculate total networth from balance and stock value.
+def get_net_worth(user: User, db_path: Path) -> float:
+    """Calculate total net worth from balance and stock value.
 
     Args:
         user (User): User object.
