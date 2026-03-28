@@ -46,8 +46,8 @@ def check_answer(answer: str, user_answer: str) -> bool:
     Returns:
         bool: True if user answered correctly.
     """
+    user_answer = user_answer.lower().strip()
     user_answer = nicknames(user_answer)
-    user_answer.lower().strip()
     return answer == user_answer
 
 
