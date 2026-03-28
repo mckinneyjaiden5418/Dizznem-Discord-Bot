@@ -31,18 +31,20 @@ class DizznemBot(commands.Bot):
         """Load all cogs and start autosave for database."""
         logger.info("Loading cogs...")
         cogs_path: Path = Path(__file__).parent / "cogs"
-        for file in cogs_path.iterdir():
-            if (
-                file.is_file()
-                and file.suffix == ".py"
-                and not file.name.startswith("_")
-            ):
-                ext: str = f"bot.cogs.{file.stem}"
-                try:
-                    await self.load_extension(ext)
-                    logger.info(f"Loaded cog {ext}.")
-                except FileNotFoundError as e:
-                    logger.error(f"Failed to load cog {ext}: {e}.")
+        for file in cogs_path.rglob("*.py"):
+            if file.name.startswith("_"):
+                continue
+
+            relative: Path = file.relative_to(Path(__file__).parent)
+            ext: str = ".".join(relative.with_suffix("").parts)
+
+            try:
+                await self.load_extension(ext)
+                logger.info(f"Loaded cog {ext}.")
+            except commands.NoEntryPointError:
+                logger.debug(f"Cog {ext} does not have a setup function, skipping.")
+            except (commands.ExtensionError, commands.ExtensionFailed) as e:
+                logger.error(f"Failed to load cog {ext}: {e}.")
 
         self.loop.create_task(autosave())
         logger.info("Autosave task started.")
