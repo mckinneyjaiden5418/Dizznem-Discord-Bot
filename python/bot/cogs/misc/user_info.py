@@ -5,7 +5,11 @@ from discord import Color, Embed, Member
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
-from utils.misc.leaderboard import build_leaderboard_embed
+from utils.misc.leaderboard import (
+    USERS_DB_PATH,
+    build_leaderboard_embed,
+    get_level_rank,
+)
 from utils.misc.leaderboard_views import LeaderboardView
 from utils.numbers import format_number
 
@@ -36,12 +40,16 @@ class UserInfo(commands.Cog):
         user_id: int = member.id if member else ctx.author.id
         username: str = member.name if member else ctx.author.name
         display_name: str = member.display_name if member else ctx.author.display_name
-        avatar_url: str = member.display_avatar.url if member else ctx.author.display_avatar.url
+        avatar_url: str = (
+            member.display_avatar.url if member else ctx.author.display_avatar.url
+        )
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
 
         level: int = user.level
         message_count: int = user.message_count
         required_messages: float = 2 * (level**2) + (50 * level) + 100
+        level_rank: int | None = get_level_rank(USERS_DB_PATH, user_id)
+        rank_display: str = f"**#{level_rank}**" if level_rank else "**Unranked**"
 
         progress_percent: float = min(message_count / required_messages, 1)
         progress_bar_length: int = 20
@@ -53,12 +61,15 @@ class UserInfo(commands.Cog):
             title=f"{display_name}'s Level Stats",
             color=Color.og_blurple(),
         )
-        embed.set_thumbnail(
-            url=avatar_url,
-        )
+        embed.set_thumbnail(url=avatar_url)
         embed.add_field(
             name="📈 Level",
             value=f"**{format_number(number=level)}**",
+            inline=True,
+        )
+        embed.add_field(
+            name="🏆 Server Rank",
+            value=rank_display,
             inline=True,
         )
         embed.add_field(
@@ -83,7 +94,9 @@ class UserInfo(commands.Cog):
         name="profile",
         description="Get your profile",
     )
-    async def profile(self, ctx: commands.Context, member: Member | None = None) -> None:
+    async def profile(
+        self, ctx: commands.Context, member: Member | None = None,
+    ) -> None:
         """Profile command.
 
         Args:
