@@ -1,6 +1,6 @@
 # Dizznem Bot Changelog
 
-## [Unreleased] - 2025-12-13
+## [2.0.0] - 2025-3-29
 ### Added
 - Whole new/refactored backend!
 - Dizznem Bot now has a YouTube feature!
@@ -13,6 +13,9 @@
     - $queue shows the queue.
     - $nowplaying shows what is currently playing.
     - See notes section in changelog for more information about this feature.
+- New response commands.
+- There was another big feature I had 95% complete but apparently I have to wait over a week to get it approved so that's coming in a later update.
+- Some other things that I just don't feel like typing out go figure it out yourself.
 
 ### Changed
 - All output replaced with embeds with small exceptions such as AI responses.
