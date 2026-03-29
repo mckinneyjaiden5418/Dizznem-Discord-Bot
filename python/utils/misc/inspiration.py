@@ -60,6 +60,44 @@ def add_quote(db_path: Path, quote: str) -> None:
         conn.commit()
 
 
+def validate_quote(quote: str) -> tuple[bool, str]:
+    """Validate an inspirational quote before adding it.
+
+    Args:
+        quote (str): The quote to validate.
+
+    Returns:
+        tuple[bool, str]: (is_valid, error_message)
+    """
+    stripped: str = quote.strip()
+    TOO_SHORT: int = 10
+    TOO_LONG: int = 300
+    TOO_MANY_LINE_BREAKS: int = 3
+    MIN_LETTER_RATIO: float = 0.4
+
+    if len(stripped) < TOO_SHORT:
+        return False, f"Quote is too short. Must be at least {TOO_SHORT} characters."
+
+    if len(stripped) > TOO_LONG:
+        return False, f"Quote is too long. Must be {TOO_LONG} characters or less."
+
+    if stripped.count("\n") > TOO_MANY_LINE_BREAKS:
+        return (
+            False,
+            f"Quote cannot contain more than {TOO_MANY_LINE_BREAKS} line breaks.",
+        )
+
+    # Must be at least 40% actual letters (prevents pure emoji/symbol spam)
+    letter_count: int = sum(c.isalpha() for c in stripped)
+    if len(stripped) > 0 and letter_count / len(stripped) < MIN_LETTER_RATIO:
+        return (
+            False,
+            f"Quote must contain mostly readable text. Minimum ratio is {MIN_LETTER_RATIO:.1%}.",
+        )
+
+    return True, ""
+
+
 def get_random_quote(db_path: Path) -> str | None:
     """Fetch a random inspirational quote from the database.
 

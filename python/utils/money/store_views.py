@@ -15,7 +15,7 @@ from discord import (
 from discord.ext.commands import Bot
 from discord.ui import Button, Modal, TextInput, View, button
 from user import User
-from utils.misc.inspiration import INSPIRATION_DB_PATH, add_quote
+from utils.misc.inspiration import INSPIRATION_DB_PATH, add_quote, validate_quote
 from utils.money.stocks import USERS_DB_PATH
 from utils.numbers import format_number
 
@@ -58,8 +58,8 @@ class StoreView(View):
     """View for the store."""
 
     CUCKDIFF_ID: int = 284502028896698369
-    KARMA_ID: int = 1229590915610574893
-    DIZZNEM_ID: int = 222002830964162561
+    KARMA_ID: int = 222002830964162561
+    DIZZNEM_ID: int = 1229590915610574893
 
     def __init__(
         self,
@@ -220,7 +220,7 @@ class StoreView(View):
                 description=f"Pinging Cuckdiff {ping_count} times!",
             ),
         )
-        for _ in range(ping_count):  # type: ignore  # noqa: PGH003
+        for _ in range(ping_count): # pyright: ignore[reportAssignmentType]
             await interaction.channel.send( # pyright: ignore[reportOptionalMemberAccess] # type: ignore  # noqa: PGH003
                 f"<@{self.CUCKDIFF_ID}>",
             )
@@ -265,6 +265,20 @@ class StoreView(View):
 
         async def on_submit(inter: Interaction, text: str) -> None:
             await self._deduct(cost)
+            is_valid: bool
+            error: str
+            is_valid, error = validate_quote(text)
+            if not is_valid:
+                await inter.response.send_message(
+                    embed=Embed(
+                        title="❌ Invalid Quote",
+                        color=Color.red(),
+                        description=error,
+                    ),
+                    ephemeral=True,
+                )
+                return
+
             add_quote(INSPIRATION_DB_PATH, text)
             await inter.response.send_message(
                 embed=Embed(
@@ -298,7 +312,7 @@ class StoreView(View):
                 description="Asked Karma SB to make an inspirational video!",
             ),
         )
-        await interaction.channel.send(  # pyright: ignore[reportOptionalMemberAccess] # type: ignore  # noqa: PGH003
+        await interaction.channel.send(  # pyright: ignore[reportAttributeAccessIssue] # type: ignore  # noqa: PGH003
             f"<@{self.KARMA_ID}> please make an inspirational video!",
         )
 
@@ -317,8 +331,8 @@ class StoreView(View):
 
         async def on_submit(inter: Interaction, text: str) -> None:
             channel: TextChannel | None = self.bot.get_channel(
-                self.bot.inspiration_channel_id,  # pyright: ignore[reportAttributeAccessIssue]
-            )  # type: ignore  # noqa: PGH003
+                self.bot.inspiration_channel_id, # type: ignore  # noqa: PGH003
+            )
             if channel is None:
                 await inter.response.send_message(
                     "Could not find the inspiration channel.",
@@ -360,7 +374,7 @@ class StoreView(View):
         async def on_submit(inter: Interaction, text: str) -> None:
             channel: TextChannel | None = self.bot.get_channel(
                 self.bot.qotd_channel_id,  # type: ignore  # noqa: PGH003
-            )  # pyright: ignore[reportAssignmentType]
+            )
             if channel is None:
                 await inter.response.send_message(
                     "Could not find the QOTD channel.",
@@ -389,7 +403,7 @@ class StoreView(View):
     @button(label="⭐ PRESTIGE ($100,000,000)", style=ButtonStyle.red, row=3)
     async def prestige( # pyright: ignore[reportRedeclaration]
         self, interaction: Interaction, _: Button,
-    ) -> None:  # pyright: ignore[reportRedeclaration]
+    ) -> None:
         """Prestige — resets money and stocks.
 
         Args:

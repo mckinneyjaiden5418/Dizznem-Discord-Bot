@@ -3,7 +3,7 @@
 from typing import Final
 
 from bot.bot import DizznemBot
-from discord import Asset, Color, Embed, Member
+from discord import Asset, Color, Embed, Member, Message
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
@@ -220,7 +220,7 @@ class Money(commands.Cog):
             balance=user.money,
             prestige=user.prestige,
         )
-        message = await ctx.send(embed=embed, view=view)
+        message: Message = await ctx.send(embed=embed, view=view)
         view.message = message
 
 
