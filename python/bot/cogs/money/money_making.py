@@ -10,6 +10,7 @@ from log import logger  # noqa: F401
 from user import User
 from utils.general import get_user_answer, reset_cd
 from utils.money.roblox import check_answer, question
+from utils.money.trivia import VALID_ANSWERS, build_trivia_embed, get_random_question
 from utils.numbers import convert_money_str, format_number
 
 if TYPE_CHECKING:
@@ -279,6 +280,67 @@ class MoneyMaking(commands.Cog):
         Args:
             ctx (commands.Context): Context.
         """
+        user_id: int = ctx.author.id
+        username: str = ctx.author.name
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        earnings: int = random.randint(5_000, 10_000) * (  # noqa: S311
+            user.prestige + 1
+        )
+
+        question: str
+        choices: list[str]
+        answer: str
+        question, choices, answer = get_random_question()
+        embed: Embed = build_trivia_embed(question, choices)
+        await ctx.send(embed=embed)
+
+        user_answer: str | None = await get_user_answer(bot=self.bot, ctx=ctx)
+
+        if user_answer is None:
+            reset_cd(ctx=ctx)
+            await ctx.send(
+                embed=Embed(
+                    title="⏰ Time's Up!",
+                    color=Color.red(),
+                    description="You took too long to answer!",
+                ),
+            )
+            return
+
+        if user_answer.lower() not in VALID_ANSWERS:
+            reset_cd(ctx=ctx)
+            await ctx.send(
+                embed=Embed(
+                    title="❌ Invalid Answer",
+                    color=Color.red(),
+                    description="Please answer with **a**, **b**, **c**, or **d**.",
+                ),
+            )
+            return
+
+        formatted_earnings: str = format_number(number=earnings)
+        if user_answer.lower() == answer:
+            user.money += earnings
+            await ctx.send(
+                embed=Embed(
+                    title="✅ Correct!",
+                    color=Color.green(),
+                    description=f"You won **${formatted_earnings}**!",
+                ),
+            )
+        else:
+            user.money -= earnings
+            answer_text: str = choices[ord(answer) - ord("a")]
+            await ctx.send(
+                embed=Embed(
+                    title="❌ Incorrect",
+                    color=Color.red(),
+                    description=(
+                        f"You lost **${formatted_earnings}**!\n\n"
+                        f"The correct answer was **{answer.upper()}. {answer_text}**."
+                    ),
+                ),
+            )
 
 
 async def setup(bot: DizznemBot) -> None:
