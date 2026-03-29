@@ -1,5 +1,6 @@
 """Main file for bot."""
 
+import asyncio
 import os
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
@@ -8,6 +9,7 @@ from discord import Color, Embed, Intents, Message, TextChannel
 from discord.ext import commands
 from log import logger
 from user import User, autosave
+from utils.misc.ai import get_ai_response
 
 if TYPE_CHECKING:
     from discord.app_commands.models import AppCommand
@@ -32,6 +34,7 @@ class DizznemBot(commands.Bot):
         self.admin_id: int = int(
             cast("str", os.getenv("ADMIN_ID", "222002830964162561")),
         )
+        self.ai_api_key: str = cast("str", os.getenv("AI_API_KEY", ""))
 
     async def setup_hook(self) -> None:
         """Load all cogs and start autosave for database."""
@@ -174,8 +177,15 @@ class DizznemBot(commands.Bot):
                 continue
 
             if trigger == self.bot_tag:
-                await message.channel.send("Placeholder!")
-                # AI feature here when added.
+                prompt: str = content.replace(self.bot_tag, "").strip()
+                if not prompt:
+                    await message.channel.send("Ask me something!")
+                else:
+                    async with message.channel.typing():
+                        ai_response: str = await asyncio.to_thread(
+                            get_ai_response, prompt, self.ai_api_key,
+                        )
+                    await message.channel.send(ai_response)
             else:
                 await message.channel.send(response)
 
