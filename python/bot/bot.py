@@ -31,6 +31,9 @@ class DizznemBot(commands.Bot):
         self.inspiration_channel_id: int = int(
             cast("str", os.getenv("INSPIRATION_CHANNEL_ID", "0")),
         )
+        self.qotd_channel_id: int = int(
+            cast("str", os.getenv("QOTD_CHANNEL_ID", "0")),
+        )
         self.admin_id: int = int(
             cast("str", os.getenv("ADMIN_ID", "222002830964162561")),
         )
