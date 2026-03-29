@@ -53,7 +53,7 @@ class MoneyMaking(commands.Cog):
         user.money += daily_value
 
         embed: Embed = Embed(
-            title="Daily",
+            title="💰 Daily",
             color=Color.green(),
             description=f"You earned ${formatted_daily_value}",
         )
@@ -82,7 +82,7 @@ class MoneyMaking(commands.Cog):
         user.money += weekly_value
 
         embed: Embed = Embed(
-            title="Weekly",
+            title="🤑 Weekly",
             color=Color.green(),
             description=f"You earned ${formatted_weekly_value}",
         )

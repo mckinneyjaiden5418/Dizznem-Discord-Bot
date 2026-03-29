@@ -63,7 +63,7 @@ class Admin(commands.Cog):
         user.money = amount_float
 
         embed: Embed = Embed(
-            title="Placeholder",
+            title="🏦",
             color=Color.green(),
             description=f"Added {amount_float}.",
         )

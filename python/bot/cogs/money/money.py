@@ -148,7 +148,7 @@ class Money(commands.Cog):
         sender_user.money -= amount_float
 
         embed: Embed = Embed(
-            title="Success",
+            title="💸 Success",
             color=Color.green(),
             description=f"Successfully gave {recipient_display_name} ${formatted_amount}",
         )
