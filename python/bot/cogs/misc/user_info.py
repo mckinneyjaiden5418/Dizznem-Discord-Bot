@@ -5,6 +5,8 @@ from discord import Color, Embed, Member
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
+from utils.misc.leaderboard import build_leaderboard_embed
+from utils.misc.leaderboard_views import LeaderboardView
 from utils.numbers import format_number
 
 
@@ -88,6 +90,21 @@ class UserInfo(commands.Cog):
             ctx (commands.Context): Context.
             member (Member | None): Member if mentioned.
         """
+
+    @commands.hybrid_command(
+        name="leaderboard",
+        description="View various user leaderboards",
+        aliases=["lb"],
+    )
+    async def leaderboard(self, ctx: commands.Context) -> None:
+        """Leaderboard command.
+
+        Args:
+            ctx (commands.Context): Context.
+        """
+        embed: Embed = build_leaderboard_embed("balance")
+        view: LeaderboardView = LeaderboardView()
+        view.message = await ctx.send(embed=embed, view=view)
 
 
 async def setup(bot: DizznemBot) -> None:
