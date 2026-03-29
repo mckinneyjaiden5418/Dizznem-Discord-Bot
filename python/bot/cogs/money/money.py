@@ -9,6 +9,7 @@ from log import logger  # noqa: F401
 from user import User
 from utils.general import reset_cd
 from utils.money.stocks import USERS_DB_PATH
+from utils.money.store_views import StoreView
 from utils.numbers import convert_money_str, format_number, get_net_worth
 
 
@@ -180,10 +181,14 @@ class Money(commands.Cog):
             description=f"${format_number(number=total_networth)}",
         )
         embed.add_field(
-            name="Balance", value=f"${format_number(number=user.money)}", inline=True,
+            name="Balance",
+            value=f"${format_number(number=user.money)}",
+            inline=True,
         )
         embed.add_field(
-            name="Stocks", value=f"${format_number(number=stock_value)}", inline=True,
+            name="Stocks",
+            value=f"${format_number(number=stock_value)}",
+            inline=True,
         )
         embed.set_author(name=display_name, icon_url=avatar)
 
@@ -200,7 +205,23 @@ class Money(commands.Cog):
         Args:
             ctx (commands.Context): Context.
         """
-        # Do later
+        user: User = User.create_if_not_exists(
+            user_id=ctx.author.id,
+            username=ctx.author.name,
+        )
+
+        view = StoreView(
+            user_id=ctx.author.id,
+            balance=user.money,
+            prestige=user.prestige,
+            bot=self.bot,
+        )
+        embed: Embed = StoreView.build_embed(
+            balance=user.money,
+            prestige=user.prestige,
+        )
+        message = await ctx.send(embed=embed, view=view)
+        view.message = message
 
 
 async def setup(bot: DizznemBot) -> None:

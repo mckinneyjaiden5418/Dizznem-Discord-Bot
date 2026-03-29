@@ -11,6 +11,8 @@ DEFAULT_QUOTES: list[str] = [
     "The future belongs to those who believe in the beauty of their dreams.",
 ]
 
+INSPIRATION_DB_PATH: Path = Path("data/inspiration.db")
+
 
 def ensure_inspiration_db(db_path: Path) -> None:
     """Create inspiration.db with default quotes if it doesn't exist.
@@ -35,6 +37,26 @@ def ensure_inspiration_db(db_path: Path) -> None:
                 "INSERT INTO messages (message) VALUES (?)",
                 [(q,) for q in DEFAULT_QUOTES],
             )
+        conn.commit()
+
+
+def add_quote(db_path: Path, quote: str) -> None:
+    """Add a quote to the inspiration database.
+
+    Args:
+        db_path (Path): SQLite database path.
+        quote (str): Quote to add.
+    """
+    ensure_inspiration_db(db_path)
+    with sqlite3.connect(db_path) as conn:
+        cursor: sqlite3.Cursor = conn.execute(
+            "SELECT IFNULL(MAX(messageID), 0) + 1 FROM messages",
+        )
+        next_id: int = cursor.fetchone()[0]
+        conn.execute(
+            "INSERT INTO messages (messageID, message) VALUES (?, ?)",
+            (next_id, quote),
+        )
         conn.commit()
 
 
