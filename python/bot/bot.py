@@ -172,6 +172,12 @@ class DizznemBot(commands.Bot):
                 "super speed clicker",
                 "https://www.roblox.com/games/139600379808227/Super-Speed-Clicker",
             ),
+            ("good bot", "Thank you! I try my best!"),
+            ("monster", "Aura Monster."),
+            ("all girls", "All girls are the same bro..."),
+            ("67", "67"),
+            ("six seven", "SIX SEVEN!"),
+            ("wallahi", "Say wallahi bro, say wallahi!"),
         ]
 
         content: str = message.content.lower()
