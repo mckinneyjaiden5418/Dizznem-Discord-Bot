@@ -61,7 +61,10 @@ def get_networth_leaderboard(db_path: Path) -> list[tuple[str, float]]:
 
     results: list[tuple[str, float]] = []
     for user_id, name, money in rows:
-        holdings: list[tuple[str, int, float]] = get_user_stocks(STOCKS_DB_PATH, user_id)
+        holdings: list[tuple[str, int, float]] = get_user_stocks(
+            STOCKS_DB_PATH,
+            user_id,
+        )
         stock_value: float = sum(value for _, _, value in holdings)
         results.append((name, money + stock_value))
 
@@ -69,13 +72,28 @@ def get_networth_leaderboard(db_path: Path) -> list[tuple[str, float]]:
     return results[:10]
 
 
-def build_leaderboard_embed(
-    category: str,
-) -> Embed:
+def get_level_leaderboard(db_path: Path) -> list[tuple[str, int]]:
+    """Get top 10 users by level.
+
+    Args:
+        db_path (Path): Path to users.db.
+
+    Returns:
+        list[tuple[str, int]]: List of (username, level).
+    """
+    with sqlite3.connect(db_path) as conn:
+        cursor: sqlite3.Cursor = conn.cursor()
+        cursor.execute(
+            "SELECT name, level FROM users ORDER BY level DESC LIMIT 10",
+        )
+        return cursor.fetchall()
+
+
+def build_leaderboard_embed(category: str) -> Embed:
     """Build a leaderboard embed for the given category.
 
     Args:
-        category (str): One of 'balance', 'networth', 'prestige'.
+        category (str): One of 'balance', 'networth', 'prestige', 'level'.
 
     Returns:
         Embed: The leaderboard embed.
@@ -89,25 +107,36 @@ def build_leaderboard_embed(
             for i, (name, val) in enumerate(rows)
         ]
     elif category == "networth":
-        rows: list[tuple[str, float]] = get_networth_leaderboard(USERS_DB_PATH)
-        title: str = "📊 Net Worth Leaderboard"
-        color: Color = Color.gold()
-        lines: list[str] = [
+        rows = get_networth_leaderboard(USERS_DB_PATH)
+        title = "📊 Net Worth Leaderboard"
+        color = Color.gold()
+        lines = [
             f"`{i + 1}.` **{name}** — ${format_number(val)}"
             for i, (name, val) in enumerate(rows)
         ]
-    else:  # prestige
-        rows: list[tuple[str, float]] = get_prestige_leaderboard(USERS_DB_PATH) # pyright: ignore[reportAssignmentType]
-        title: str = "⭐ Prestige Leaderboard"
-        color: Color = Color.og_blurple()
-        lines: list[str] = [
+    elif category == "prestige":
+        rows = get_prestige_leaderboard(
+            USERS_DB_PATH,
+        )  # pyright: ignore[reportAssignmentType]
+        title = "⭐ Prestige Leaderboard"
+        color = Color.og_blurple()
+        lines = [
             f"`{i + 1}.` **{name}** — {format_number(val)} prestiges"
             for i, (name, val) in enumerate(rows)
         ]
+    else:  # level
+        rows = get_level_leaderboard(
+            USERS_DB_PATH,
+        )  # pyright: ignore[reportAssignmentType]
+        title = "📈 Level Leaderboard"
+        color = Color.blue()
+        lines = [
+            f"`{i + 1}.` **{name}** — Level {format_number(val)}"
+            for i, (name, val) in enumerate(rows)
+        ]
 
-    embed = Embed(
+    return Embed(
         title=title,
         color=color,
         description="\n".join(lines) if lines else "No users found.",
     )
-    return embed  # noqa: RET504

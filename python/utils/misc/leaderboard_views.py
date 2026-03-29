@@ -26,6 +26,7 @@ class LeaderboardView(View):
             SelectOption(label="Balance", value="balance", emoji="💰", default=True),
             SelectOption(label="Net Worth", value="networth", emoji="📊"),
             SelectOption(label="Prestige", value="prestige", emoji="⭐"),
+            SelectOption(label="Level", value="level", emoji="📈"),
         ],
     )
     async def select_category(self, interaction: Interaction, select: select) -> None:
