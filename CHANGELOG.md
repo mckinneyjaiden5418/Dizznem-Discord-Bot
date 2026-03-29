@@ -17,6 +17,9 @@
     - To buy/sell stocks do $buystock {stock_name} or $sellstock {stock_name}.
     - I'll be able to add more stocks in the future very easily due to this overhaul, so yay!
     - Some other changes I don't feel like typing out just check it out, the rest is self explanatory.
+- Dizznem Bot AI slight changes to personality.
+- $profile & $level show more information.
+- All leaderboard commands condensed to just $leaderboard with a dropdown option to see different leaderboards.
 
 ### Fixed
 - Possible sources of data loss.
