@@ -86,7 +86,7 @@ class Misc(commands.Cog):
         Args:
             ctx (commands.Context): Context.
         """
-        help_text: str = get_help_text()
+        help_text: str = get_help_text(ctx.bot)
         embed: Embed = Embed(
             title="Commands",
             color=Color.og_blurple(),
