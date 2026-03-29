@@ -50,6 +50,7 @@
 - User data that was not reset dates back to 11/21/25.
 - YouTube feature will likely have quite a few bugs due to limited testing. Report any bugs to me and I'll work on fixing them.
 - YouTube feature will get more refined in a future update (such as vote skipping), I just wanted to get the feature out for 2.0.0.
+- YouTube feature probably has a bug where it'll stop playing something randomly, but I wanted to get this out today so I'll fix this later haha.
 
 ## [1.0.0] - 2025-3-30
 ### Added
