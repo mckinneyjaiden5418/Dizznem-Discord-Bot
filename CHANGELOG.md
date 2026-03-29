@@ -20,6 +20,7 @@
 - Dizznem Bot AI slight changes to personality.
 - $profile & $level show more information.
 - All leaderboard commands condensed to just $leaderboard with a dropdown option to see different leaderboards.
+- $store has a more GUI like approach.
 
 ### Fixed
 - Possible sources of data loss.
