@@ -3,6 +3,16 @@
 ## [Unreleased] - 2025-12-13
 ### Added
 - Whole new/refactored backend!
+- Dizznem Bot now has a YouTube feature!
+    - $play "video title" to play a video
+    - Alternatively, you can do $play (video link)
+    - $skip to skip a video.
+    - $pause to pause a video.
+    - $resume to resume a paused video.
+    - $stop stops the playback, clears the queue, and disconnects.
+    - $queue shows the queue.
+    - $nowplaying shows what is currently playing.
+    - See notes section in changelog for more information about this feature.
 
 ### Changed
 - All output replaced with embeds with small exceptions such as AI responses.
@@ -38,6 +48,8 @@
 ### Notes
 - Your level will start at 1. If you had a lot of messages on Dizznem Bot 1.0.0, you may level up rapidly for a bit until the bot syncs you to the correct level.
 - User data that was not reset dates back to 11/21/25.
+- YouTube feature will likely have quite a few bugs due to limited testing. Report any bugs to me and I'll work on fixing them.
+- YouTube feature will get more refined in a future update (such as vote skipping), I just wanted to get the feature out for 2.0.0.
 
 ## [1.0.0] - 2025-3-30
 ### Added
