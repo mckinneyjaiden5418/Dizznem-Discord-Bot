@@ -1,6 +1,6 @@
 # Dizznem Bot Changelog
 
-## [2.0.0] - 2025-3-29
+## [2.0.0] - 2026-3-29
 ### Added
 - Whole new/refactored backend!
 - Dizznem Bot now has a YouTube feature!
