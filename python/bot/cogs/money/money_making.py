@@ -94,7 +94,7 @@ class MoneyMaking(commands.Cog):
         description="Gamble your money",
         aliases=["gamba"],
     )
-    @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
+    @commands.cooldown(rate=1, per=3, type=commands.BucketType.user)
     async def gamble(self, ctx: commands.Context, amount: str) -> None:
         """Gamble command.
 
@@ -123,6 +123,7 @@ class MoneyMaking(commands.Cog):
             await ctx.send(embed=embed)
             return
 
+        user_money_rounded: float = round(user.money, 2)
         gamble_amount = round(gamble_amount, 2)
 
         if gamble_amount <= 0:
@@ -135,7 +136,7 @@ class MoneyMaking(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        if user.money < gamble_amount:
+        if user_money_rounded < gamble_amount:
             reset_cd(ctx=ctx)
             embed: Embed = Embed(
                 title="Error",
