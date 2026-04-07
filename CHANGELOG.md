@@ -1,5 +1,15 @@
 # Dizznem Bot Changelog
 
+## [2.0.1] - 2026-4-7
+### Changed
+- Lowered gambling cd to 3 seconds.
+- Cooldowns are now formatted by days -> hours -> minutes -> seconds.
+
+### Fixed
+- Gambling all your money sometimes not working.
+- YouTube command being slow/buggy (probably not but I might have! it's hard to test because the raspberry pi seems like the main reason it was doing this).
+
+
 ## [2.0.0] - 2026-3-29
 ### Added
 - Whole new/refactored backend!

@@ -113,11 +113,7 @@ class YouTube(commands.Cog):
         return info.get("url")
 
     def _play_next(self, ctx: commands.Context) -> None:
-        """Play the next song in the queue, fetching a fresh URL before playing.
-
-        Args:
-            ctx (commands.Context): Context.
-        """
+        """Play the next song in the queue."""
         if not self.queue or not self.voice_client:
             self.current = None
             return
@@ -125,28 +121,39 @@ class YouTube(commands.Cog):
         self.current = self.queue.popleft()
 
         async def _start_playing() -> None:
-            """Fetch fresh URL and start playback."""
             if self.current is None:
                 return
 
-            fresh_info: dict | None = await self._fetch_info(
-                self.current["webpage_url"],
-            )
-            if fresh_info is None:
-                logger.error(f"Failed to re-fetch info for {self.current['title']}")
-                await self._send_next_playing(ctx)
-                return
+            def _get_fresh_url() -> str | None:
+                with yt_dlp.YoutubeDL({
+                    **YDL_OPTIONS,
+                    "quiet": True,
+                    "no_warnings": True,
+                }) as ydl: # pyright: ignore[reportArgumentType]
+                    try:
+                        info: _InfoDict= ydl.extract_info(
+                            self.current["webpage_url"], # pyright: ignore[reportOptionalSubscript]
+                            download=False,
+                        )
+                        formats: list = info.get("formats", []) # pyright: ignore[reportAssignmentType]
+                        audio_formats: list[dict] = [
+                            f for f in formats
+                            if f.get("acodec") != "none" and f.get("vcodec") == "none"
+                        ]
+                        if audio_formats:
+                            return audio_formats[-1]["url"]
+                        return info.get("url")
+                    except yt_dlp.utils.DownloadError as e:  # pyright: ignore[reportAttributeAccessIssue]
+                        logger.error(f"Failed to get fresh URL: {e}")
+                        return None
 
-            audio_url: str | None = self._get_audio_url(fresh_info)
+            audio_url: str | None = await asyncio.to_thread(_get_fresh_url)
             if audio_url is None or not self.voice_client:
                 self.current = None
                 return
 
             source: PCMVolumeTransformer[FFmpegPCMAudio] = PCMVolumeTransformer(
-                FFmpegPCMAudio(
-                    audio_url,
-                    **FFMPEG_OPTIONS,
-                ),
+                FFmpegPCMAudio(audio_url, **FFMPEG_OPTIONS),
                 volume=0.5,
             )
 
@@ -154,8 +161,7 @@ class YouTube(commands.Cog):
                 if error:
                     logger.error(f"Audio playback error: {error}")
                 asyncio.run_coroutine_threadsafe(
-                    self._send_next_playing(ctx),
-                    self.bot.loop,
+                    self._send_next_playing(ctx), self.bot.loop,
                 )
 
             self.voice_client.play(source, after=after_playing)
