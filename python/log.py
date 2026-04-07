@@ -12,7 +12,7 @@ def set_up_logger(module_name: str) -> logging.Logger:
     Returns:
         logging.Logger: Logger.
     """
-    is_debug_mode: bool = True
+    is_debug_mode: bool = False
 
     logging.basicConfig(
         level=logging.DEBUG if is_debug_mode else logging.INFO,
