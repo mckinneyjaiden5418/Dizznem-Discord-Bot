@@ -10,6 +10,7 @@ from discord.ext import commands
 from log import logger
 from user import User, autosave
 from utils.misc.ai import get_ai_response
+from utils.numbers import format_duration
 
 if TYPE_CHECKING:
     from discord.app_commands.models import AppCommand
@@ -105,12 +106,13 @@ class DizznemBot(commands.Bot):
         ):
             ctx.command.reset_cooldown(ctx)
 
+
         if isinstance(error, commands.CommandOnCooldown):
-            # Add formatting for minutes, hours, days, etc. later
+            formatted_time: str = format_duration(error.retry_after)
             embed = Embed(
                 title="Cooldown",
                 color=Color.orange(),
-                description=(f"Try again in **{error.retry_after:.1f} seconds**."),
+                description=(f"Try again in **{formatted_time}**."),
             )
 
         elif isinstance(error, commands.MissingRequiredArgument):

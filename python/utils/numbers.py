@@ -54,3 +54,36 @@ def get_net_worth(user: User, db_path: Path) -> float:
     """
     stock_value: float = sum(value for _, _, value in get_user_stocks(db_path, user.id))
     return user.money + stock_value
+
+
+def format_duration(seconds: float) -> str:
+    """Format cooldown time.
+
+    Args:
+        seconds (float): Seconds until cooldown expires.
+
+    Returns:
+        str: Formatted duration string.
+    """
+    seconds = round(seconds)
+
+    days: int
+    hours: int
+    minutes: int
+    remainder: int
+    days, remainder = divmod(seconds, 86400)
+    hours, remainder = divmod(remainder, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    parts: list[str] = []
+
+    if days > 0:
+        parts.append(f"{days} day{'s' if days != 1 else ''}")
+    if hours > 0:
+        parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
+    if minutes > 0:
+        parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
+    if seconds > 0 or not parts:
+        parts.append(f"{seconds} second{'s' if seconds != 1 else ''}")
+
+    return ", ".join(parts)
