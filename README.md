@@ -15,8 +15,8 @@ A Discord bot for the Dizznem community built with discord.py. Features an econo
 - **Profile & Levels** — Track messages, level up, and view your server rank
 - **Inspiration** — Daily inspirational quotes sent automatically at 8 PM EST
 - **AI Chat** — Talk to Dizznem Bot AI powered by DeepSeek
-- **Reddit** - Browse Reddit posts and user info (not done yet, about to be added)
-- **More** - A lot more features that I don't feel like listing out
+- **Reddit** — Browse Reddit posts and user info (not done yet, about to be added)
+- **More** — A lot more features that I don't feel like listing out
 
 ---
 
