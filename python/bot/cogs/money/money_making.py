@@ -55,7 +55,7 @@ class MoneyMaking(commands.Cog):
         embed: Embed = Embed(
             title="💰 Daily",
             color=Color.green(),
-            description=f"You earned ${formatted_daily_value}",
+            description=f"You earned $**{formatted_daily_value}**",
         )
 
         await ctx.send(embed=embed)
@@ -84,7 +84,7 @@ class MoneyMaking(commands.Cog):
         embed: Embed = Embed(
             title="🤑 Weekly",
             color=Color.green(),
-            description=f"You earned ${formatted_weekly_value}",
+            description=f"You earned $**{formatted_weekly_value}**",
         )
 
         await ctx.send(embed=embed)
