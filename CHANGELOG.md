@@ -1,5 +1,10 @@
 # Dizznem Bot Changelog
 
+## [2.0.2] - 2026-XX-XX
+### Fixed
+- $daily and $weekly money amount not being bolded.
+- $setmoney (admin command) text being misleading / not accurate.
+
 ## [2.0.1] - 2026-4-7
 ### Changed
 - Lowered gambling cd to 3 seconds.
