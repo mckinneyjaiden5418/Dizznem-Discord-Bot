@@ -212,3 +212,6 @@ __marimo__/
 # ffmpeg
 ffmpeg-*-amd64-static/
 ffmpeg-release-amd64-static.tar.xz*
+
+# devcontainer
+.devcontainer/devcontainer-lock.json
