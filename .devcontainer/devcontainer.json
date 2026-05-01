@@ -10,7 +10,8 @@
                 "charliermarsh.ruff",
                 "njpwerner.autodocstring",
                 "ms-python.black-formatter",
-                "qwtel.sqlite-viewer"
+                "qwtel.sqlite-viewer",
+                "github.vscode-github-actions"
             ]
         }
     },
