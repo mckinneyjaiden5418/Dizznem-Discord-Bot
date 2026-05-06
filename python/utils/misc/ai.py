@@ -6,18 +6,19 @@ from log import logger
 SYSTEM_NOTE: str = """You are being used as a chatbot in a discord bot known as Dizznem bot.
 You are to respond as if you are Dizznem bot AI.
 Dizznem is a retired streamer who used to stream on Twitch.
-Dizznem is now a tiktok shop buisness man.
+Dizznem is now an AI content creator to make big money.
 He is friends with Karma SB who made this bot.
 Only include relevant information in your response, if nothing is relevant here, just ignore it.
 Don't include any reference to this note in your response!"""
 
 
-def get_ai_response(prompt: str, api_key: str) -> str:
+def get_ai_response(prompt: str, api_key: str, cache: list[dict]) -> str:
     """Get an AI response from DeepSeek.
 
     Args:
         prompt (str): The user's prompt.
         api_key (str): DeepSeek API key.
+        cache (list[dict]): A list of previous messages for context.
 
     Returns:
         str: The AI response.
@@ -33,6 +34,7 @@ def get_ai_response(prompt: str, api_key: str) -> str:
                 "model": "deepseek-chat",
                 "messages": [
                     {"role": "system", "content": SYSTEM_NOTE},
+                    *cache,
                     {"role": "user", "content": prompt},
                 ],
             },
@@ -42,7 +44,9 @@ def get_ai_response(prompt: str, api_key: str) -> str:
         if "choices" in data and len(data["choices"]) > 0:
             return data["choices"][0]["message"]["content"].strip()
         logger.error(f"Unexpected DeepSeek API response: {data}")
-        return "I couldn't generate a response right now. Try again later."  # noqa: TRY300
+        return (  # noqa: TRY300
+            "I couldn't generate a response right now. Try again later."
+        )
     except requests.Timeout:
         logger.error("DeepSeek API request timed out.")
         return "The request timed out. Try again later."

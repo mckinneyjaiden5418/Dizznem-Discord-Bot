@@ -1,6 +1,10 @@
 # Dizznem Bot Changelog
 
 ## [2.0.2] - 2026-XX-XX
+### Added
+- AI caching
+    - Dizznem Bot AI now remembers the last 10 messages in a conversation for better context.
+
 ### Fixed
 - $daily and $weekly money amount not being bolded.
 - $setmoney (admin command) text being misleading / not accurate.

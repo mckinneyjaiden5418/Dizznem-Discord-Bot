@@ -2,6 +2,7 @@
 
 import asyncio
 import os
+from collections import deque
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
@@ -39,6 +40,7 @@ class DizznemBot(commands.Bot):
             cast("str", os.getenv("ADMIN_ID", "222002830964162561")),
         )
         self.ai_api_key: str = cast("str", os.getenv("AI_API_KEY", ""))
+        self.cache: dict[int, deque] = {}
 
     async def setup_hook(self) -> None:
         """Load all cogs and start autosave for database."""
@@ -105,7 +107,6 @@ class DizznemBot(commands.Bot):
             and ctx.command
         ):
             ctx.command.reset_cooldown(ctx)
-
 
         if isinstance(error, commands.CommandOnCooldown):
             formatted_time: str = format_duration(error.retry_after)
@@ -188,14 +189,28 @@ class DizznemBot(commands.Bot):
                 continue
 
             if trigger == self.bot_tag:
-                prompt: str = content.replace(self.bot_tag, "").strip()
+                prompt: str = message.content.replace(self.bot_tag, "").strip()
                 if not prompt:
                     await message.channel.send("Ask me something!")
                 else:
+                    channel_id: int = message.channel.id
+                    if channel_id not in self.cache:
+                        self.cache[channel_id] = deque(
+                            maxlen=20,
+                        )  # 10 messages each from user/bot
+
+                    cache: deque = self.cache[channel_id]
+
                     async with message.channel.typing():
                         ai_response: str = await asyncio.to_thread(
-                            get_ai_response, prompt, self.ai_api_key,
+                            get_ai_response,
+                            prompt,
+                            self.ai_api_key,
+                            list(cache),
                         )
+
+                    cache.append({"role": "user", "content": prompt})
+                    cache.append({"role": "assistant", "content": ai_response})
                     await message.channel.send(ai_response)
             else:
                 await message.channel.send(response)
