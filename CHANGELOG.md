@@ -2,8 +2,12 @@
 
 ## [2.0.2] - 2026-XX-XX
 ### Added
-- AI caching
+- AI caching.
     - Dizznem Bot AI now remembers the last 10 messages in a conversation for better context.
+- Notification for leveling up.
+    - Sends in channel if able.
+    - Sends in DMs if not able to send in channel.
+    - Sends nowhere otherwise but this probably won't happen.
 
 ### Fixed
 - $daily and $weekly money amount not being bolded.
