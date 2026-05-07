@@ -8,6 +8,7 @@
 ### Fixed
 - $daily and $weekly money amount not being bolded.
 - $setmoney (admin command) text being misleading / not accurate.
+- YouTube feature should work WAYYYYYY better now (i.e. not slow... I hope).
 
 ## [2.0.1] - 2026-4-7
 ### Changed
