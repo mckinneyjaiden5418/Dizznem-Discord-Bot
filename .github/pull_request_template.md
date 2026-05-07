@@ -2,7 +2,7 @@
 
 ## Issue number
 
-Issue #
+Fixes #
 
 ## Checklist
 - [ ] No tokens, API keys, or secrets are hardcoded
