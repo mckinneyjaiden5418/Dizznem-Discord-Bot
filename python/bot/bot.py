@@ -6,7 +6,15 @@ from collections import deque
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from discord import Color, Embed, Intents, Message, TextChannel
+from discord import (
+    Color,
+    Embed,
+    Forbidden,
+    HTTPException,
+    Intents,
+    Message,
+    TextChannel,
+)
 from discord.ext import commands
 from log import logger
 from user import User, autosave
@@ -145,21 +153,37 @@ class DizznemBot(commands.Bot):
 
         await ctx.send(embed=embed)
 
-    async def on_message(self, message: Message) -> None:
-        """Handle message events.
+    async def _handle_level_up(self, message: Message, user: User) -> None:
+        """Notify user of level up via channel, falling back to DM.
 
         Args:
-            message (Message): User message.
+            message (Message): The message that triggered the level up.
+            user (User): The user who leveled up.
         """
-        if message.author == self.user or message.author.bot:
-            return
+        level_up_message: str = (
+            f"Congratulations {message.author.mention}, you "
+            f"leveled up to **level {user.level}**!"
+        )
 
-        user_id: int = message.author.id
-        username: str = message.author.name
-        user: User = User.create_if_not_exists(user_id=user_id, username=username)
-        user.message_count += 1
-        user.level_up_if_able()
+        try:
+            await message.channel.send(level_up_message)
+        except Forbidden:
+            try:
+                await message.author.send(level_up_message)
+            except Forbidden:
+                logger.debug(
+                    f"Could not notify {message.author} of level up "
+                    f"(no channel or DM permission)",
+                )
+        except HTTPException as e:
+            logger.error(f"Failed to send level up message: {e}")
 
+    async def _handle_triggers(self, message: Message) -> None:
+        """Check message content against triggers and respond accordingly.
+
+        Args:
+            message (Message): The message to check.
+        """
         triggers: list[tuple[str, str]] = [
             (self.bot_tag, ""),
             ("wackdiff", "cuckdiff*"),
@@ -217,6 +241,24 @@ class DizznemBot(commands.Bot):
 
             break
 
+    async def on_message(self, message: Message) -> None:
+        """Handle message events.
+
+        Args:
+            message (Message): User message.
+        """
+        if message.author == self.user or message.author.bot:
+            return
+
+        user_id: int = message.author.id
+        username: str = message.author.name
+        user: User = User.create_if_not_exists(user_id=user_id, username=username)
+        user.message_count += 1
+
+        if user.level_up_if_able():
+            await self._handle_level_up(message, user)
+
+        await self._handle_triggers(message)
         await self.process_commands(message)
 
     def run_bot(self) -> None:
