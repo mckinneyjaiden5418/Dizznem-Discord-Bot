@@ -1,6 +1,6 @@
 # Dizznem Bot Changelog
 
-## [2.0.2] - 2026-5-8
+## [2.1.0] - 2026-5-8
 ### Added
 - AI caching.
     - Dizznem Bot AI now remembers the last 10 messages in a conversation for better context.
