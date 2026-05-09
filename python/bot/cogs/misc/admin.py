@@ -65,7 +65,7 @@ class Admin(commands.Cog):
         embed: Embed = Embed(
             title="🏦",
             color=Color.green(),
-            description=f"Set {user}'s balance to ${amount_float}.",
+            description=f"Set **{member.display_name}**'s balance to **${amount_float:.2f}**.",
         )
 
         await ctx.send(embed=embed)
