@@ -1,6 +1,6 @@
 # Dizznem Bot Changelog
 
-## [2.0.2] - 2026-XX-XX
+## [2.0.2] - 2026-5-8
 ### Added
 - AI caching.
     - Dizznem Bot AI now remembers the last 10 messages in a conversation for better context.
@@ -9,10 +9,18 @@
     - Sends in DMs if not able to send in channel.
     - Sends nowhere otherwise but this probably won't happen.
 
+### Changed
+- $aba / $roguelineage refactored (ABA April update -- happy April 38th).
+    - New nicknames.
+    - More lenient answers (i.e. "Goku Blac" instead of "Goku Black" would work since that is close enough)
+    - Now parses the wiki automatically, so new characters/races/artifacts/creatures are picked up without manual updates.
+        - Occasionally an unintended entry may appear as a question. If this happens, let me know and I'll filter it out.
+
 ### Fixed
 - $daily and $weekly money amount not being bolded.
 - $setmoney (admin command) text being misleading / not accurate.
 - YouTube feature should work WAYYYYYY better now (i.e. not slow... I hope).
+    - (It speeds up randomly because it has "Made in Heaven" might patch this in the future idk).
 
 ## [2.0.1] - 2026-4-7
 ### Changed

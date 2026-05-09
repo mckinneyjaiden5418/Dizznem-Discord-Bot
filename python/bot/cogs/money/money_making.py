@@ -1,10 +1,11 @@
 """Money bot commands."""
 
 import random
-from typing import TYPE_CHECKING, Final
+from typing import Final
 
+import aiohttp
 from bot.bot import DizznemBot
-from discord import Color, Embed, File
+from discord import Color, Embed, Message
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
@@ -12,9 +13,6 @@ from utils.general import get_user_answer, reset_cd
 from utils.money.roblox import check_answer, question
 from utils.money.trivia import VALID_ANSWERS, build_trivia_embed, get_random_question
 from utils.numbers import convert_money_str, format_number
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class MoneyMaking(commands.Cog):
@@ -188,11 +186,12 @@ class MoneyMaking(commands.Cog):
         await ctx.send(embed=embed)
 
     async def run_roblox_trivia(self, ctx: commands.Context, game: str) -> None:
-        """Run Roblox trivia."""
-        image: Path
-        trivia_question: str
-        answer: str
-        image, trivia_question, answer = question(game=game)
+        """Run Roblox trivia.
+
+        Args:
+            ctx (commands.Context): Context.
+            game (str): "aba" or "rogue".
+        """
         title: str = "ABA Trivia" if game == "aba" else "Rogue Lineage Trivia"
 
         user_id: int = ctx.author.id
@@ -200,21 +199,50 @@ class MoneyMaking(commands.Cog):
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
         earnings: int = random.randint(25000, 50000) * (user.prestige + 1)  # noqa: S311
 
+        loading_message: Message = await ctx.send(
+            embed=Embed(
+                title=title,
+                description="Loading question...",
+                color=Color.og_blurple(),
+            ),
+        )
+
+        try:
+            image_url: str | None
+            trivia_question: str
+            answer: str
+            image_url, trivia_question, answer = await question(game=game)
+        except aiohttp.ClientError:
+            await loading_message.delete()
+            await ctx.send(
+                embed=Embed(
+                    title="⚠️ Wiki Unavailable",
+                    description="Couldn't reach the wiki right now. Try again in a moment.",
+                    color=Color.orange(),
+                ),
+            )
+            return
+
+        await loading_message.delete()
+
         question_embed: Embed = Embed(
             title=title,
             color=Color.og_blurple(),
             description=trivia_question,
         )
 
-        image_file: File = File(fp=image, filename="trivia.png")
-        question_embed.set_image(url="attachment://trivia.png")
+        if image_url:
+            question_embed.set_image(url=image_url)
+        else:
+            question_embed.set_footer(text="(No image available for this entry)")
 
-        await ctx.send(embed=question_embed, file=image_file)
+        await ctx.send(embed=question_embed)
 
         user_answer: str | None = await get_user_answer(
             bot=self.bot,
             ctx=ctx,
         )
+
         if user_answer is None:
             user.money -= earnings
             embed: Embed = Embed(
@@ -237,7 +265,7 @@ class MoneyMaking(commands.Cog):
             user.money -= earnings
             embed: Embed = Embed(
                 title="❌ Incorrect",
-                description=f"""You lost **{format_number(earnings)}**!\n\nThe correct answer was **{answer}**.""",  # noqa: E501
+                description=f"You lost **${format_number(earnings)}**!\n\nThe correct answer was **{answer}**.",  # noqa: E501
                 color=Color.red(),
             )
             await ctx.send(embed=embed)
