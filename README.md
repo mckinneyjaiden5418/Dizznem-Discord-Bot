@@ -31,7 +31,7 @@ A Discord bot for the Dizznem community built with discord.py. Features an econo
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Dizznem-Discord-Bot.git
+git clone https://github.com/mckinneyjaiden5418/Dizznem-Discord-Bot.git
 cd Dizznem-Discord-Bot
 ```
 
@@ -92,8 +92,8 @@ python3 main.py
 | Command | Description |
 |---|---|
 | `$help` | List all commands |
-| `$balance` | View your balance |
-| `$networth` | View your net worth including stocks |
+| `$balance` | View  balance |
+| `$networth` | View  net worth including stocks |
 | `$daily` | Claim your daily reward |
 | `$weekly` | Claim your weekly reward |
 | `$gamble <amount>` | Gamble your money |
