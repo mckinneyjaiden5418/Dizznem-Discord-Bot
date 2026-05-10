@@ -1,5 +1,10 @@
 # Dizznem Bot
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Version](https://img.shields.io/badge/version-2.1.0-blue)
+
+> Last updated: v2.1.0
+
 A Discord bot for the Dizznem community built with discord.py. Features an economy system, stock market, YouTube playback, trivia, leaderboards, and more.
 
 ---
@@ -15,8 +20,8 @@ A Discord bot for the Dizznem community built with discord.py. Features an econo
 - **Profile & Levels** — Track messages, level up, and view your server rank
 - **Inspiration** — Daily inspirational quotes sent automatically at 8 PM EST
 - **AI Chat** — Talk to Dizznem Bot AI powered by DeepSeek
-- **Reddit** — Browse Reddit posts and user info (not done yet, about to be added)
-- **More** — A lot more features that I don't feel like listing out
+- **Reddit** — Browse Reddit posts and user info *(coming soon)*
+- **And more** — Additional commands and features available in the bot
 
 ---
 
@@ -25,23 +30,36 @@ A Discord bot for the Dizznem community built with discord.py. Features an econo
 ### Requirements
 
 - Python 3.12+
-- FFmpeg (for YouTube audio)
-- libopus (for Discord voice)
+- FFmpeg *(optional — required only for YouTube audio playback)*
+- libopus *(optional — required only for YouTube audio playback)*
 
-### 1. Clone the repo
+### Recommended: Dev Container
+
+This project includes a devcontainer for a consistent development environment. If you're using VS Code with Docker installed:
+
+1. Clone the repo and open it in VS Code
+2. When prompted, click **Reopen in Container** (or open the Command Palette and run `Dev Containers: Reopen in Container`)
+3. The container will build automatically and install all Python dependencies via `postCreateCommand`
+4. Copy `.env.example` to `.env` inside the `python/` directory and fill in your values
+
+> FFmpeg and libopus are **not** installed by the devcontainer. If you need the YouTube cog, install them manually — see the system dependencies step below.
+
+### Manual Setup
+
+#### 1. Clone the repo
 
 ```bash
 git clone https://github.com/mckinneyjaiden5418/Dizznem-Discord-Bot.git
 cd Dizznem-Discord-Bot
 ```
 
-### 2. Install system dependencies
+#### 2. Install system dependencies *(YouTube cog only)*
 
 ```bash
 sudo apt-get update && sudo apt-get install ffmpeg libopus0 libopus-dev -y
 ```
 
-If FFmpeg is unavailable via apt (e.g. on a dev container), use the static build:
+If FFmpeg is unavailable via apt, use the static build:
 
 ```bash
 wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-armhf-static.tar.xz
@@ -50,15 +68,15 @@ sudo mv ffmpeg-*-armhf-static/ffmpeg /usr/local/bin/ffmpeg
 rm -rf ffmpeg-*
 ```
 
-Use `arm64` instead of `armhf` for 64-bit Raspberry Pi OS, or `amd64` for x86.
+> Use `arm64` instead of `armhf` for 64-bit Raspberry Pi OS, or `amd64` for x86.
 
-### 3. Install Python dependencies
+#### 3. Install Python dependencies
 
 ```bash
 pip install -r python/requirements.txt --break-system-packages
 ```
 
-### 4. Configure environment variables
+#### 4. Configure environment variables
 
 Create a `.env` file inside the `python/` directory:
 
@@ -79,7 +97,7 @@ ADMIN_ID=                 # Your Discord user ID for admin commands
 AI_API_KEY=               # DeepSeek API key for AI chat feature
 ```
 
-### 5. Run the bot
+#### 5. Run the bot
 
 ```bash
 python3 main.py
@@ -92,8 +110,8 @@ python3 main.py
 | Command | Description |
 |---|---|
 | `$help` | List all commands |
-| `$balance` | View  balance |
-| `$networth` | View  net worth including stocks |
+| `$balance` | View your balance |
+| `$networth` | View your net worth including stocks |
 | `$daily` | Claim your daily reward |
 | `$weekly` | Claim your weekly reward |
 | `$gamble <amount>` | Gamble your money |
@@ -127,6 +145,12 @@ python3 main.py
 - The Reddit cog requires a Reddit API key — see [reddit.com/prefs/apps](https://reddit.com/prefs/apps) to set one up
 - Stock prices update automatically when the US market opens each day via Yahoo Finance
 - The AI feature uses the [DeepSeek API](https://platform.deepseek.com)
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
 
 ---
 
