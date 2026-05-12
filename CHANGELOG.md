@@ -1,5 +1,9 @@
 # Dizznem Bot Changelog
 
+## [2.1.2] - 2026-5-12
+### Changed
+- Formatting of AI cooldown / cap messages.
+
 ## [2.1.1] - 2026-5-12
 ### Changed
 - Added per-user cooldown on AI chat to prevent spam.
