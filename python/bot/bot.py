@@ -26,6 +26,7 @@ if TYPE_CHECKING:
     from discord.app_commands.models import AppCommand
 
 AI_COOLDOWN: float = 5.0
+MAX_PROMPT_LENGTH: int = 1000
 
 class DizznemBot(commands.Bot):
     """Dizznem Bot class."""
@@ -228,8 +229,13 @@ class DizznemBot(commands.Bot):
 
                 self.ai_cooldowns[message.author.id] = now
                 prompt: str = message.content.replace(self.bot_tag, "").strip()
+
                 if not prompt:
                     await message.channel.send("Ask me something!")
+                elif len(prompt) > MAX_PROMPT_LENGTH:
+                    await message.channel.send(
+                        f"Your prompt is too long! Keep it under {MAX_PROMPT_LENGTH} characters.",
+                    )
                 else:
                     channel_id: int = message.channel.id
                     if channel_id not in self.cache:
