@@ -223,7 +223,7 @@ class DizznemBot(commands.Bot):
                 if now - last < AI_COOLDOWN:
                     remaining: float = AI_COOLDOWN - (now - last)
                     await message.channel.send(
-                        f"Slow down! Try again in {remaining:.1f} seconds.",
+                        f"Slow down! Try again in **{remaining:.1f}** seconds.",
                     )
                     break
 
@@ -234,7 +234,7 @@ class DizznemBot(commands.Bot):
                     await message.channel.send("Ask me something!")
                 elif len(prompt) > MAX_PROMPT_LENGTH:
                     await message.channel.send(
-                        f"Your prompt is too long! Keep it under {MAX_PROMPT_LENGTH} characters.",
+                        f"Your prompt is too long! Keep it under **{MAX_PROMPT_LENGTH}** characters.",  # noqa: E501
                     )
                 else:
                     channel_id: int = message.channel.id
