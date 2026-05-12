@@ -1,5 +1,12 @@
 # Dizznem Bot Changelog
 
+## [2.1.1] - 2026-5-12
+### Changed
+- Added per-user cooldown on AI chat to prevent spam.
+- Added global semaphore limiting concurrent AI API calls to 3.
+    - In other words only 3 AI calls can be made at once, the rest waits in a queue.
+- Added prompt length cap of 1000 characters for AI chat.
+
 ## [2.1.0] - 2026-5-8
 ### Added
 - AI caching.

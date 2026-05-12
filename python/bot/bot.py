@@ -2,6 +2,7 @@
 
 import asyncio
 import os
+import time
 from collections import deque
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
@@ -24,6 +25,8 @@ from utils.numbers import format_duration
 if TYPE_CHECKING:
     from discord.app_commands.models import AppCommand
 
+AI_COOLDOWN: float = 5.0
+MAX_PROMPT_LENGTH: int = 1000
 
 class DizznemBot(commands.Bot):
     """Dizznem Bot class."""
@@ -49,6 +52,8 @@ class DizznemBot(commands.Bot):
         )
         self.ai_api_key: str = cast("str", os.getenv("AI_API_KEY", ""))
         self.cache: dict[int, deque] = {}
+        self.ai_cooldowns: dict[int, float] = {}
+        self.ai_semaphore: asyncio.Semaphore = asyncio.Semaphore(3)
 
     async def setup_hook(self) -> None:
         """Load all cogs and start autosave for database."""
@@ -213,9 +218,24 @@ class DizznemBot(commands.Bot):
                 continue
 
             if trigger == self.bot_tag:
+                now: float = time.monotonic()
+                last: float = self.ai_cooldowns.get(message.author.id, 0)
+                if now - last < AI_COOLDOWN:
+                    remaining: float = AI_COOLDOWN - (now - last)
+                    await message.channel.send(
+                        f"Slow down! Try again in {remaining:.1f} seconds.",
+                    )
+                    break
+
+                self.ai_cooldowns[message.author.id] = now
                 prompt: str = message.content.replace(self.bot_tag, "").strip()
+
                 if not prompt:
                     await message.channel.send("Ask me something!")
+                elif len(prompt) > MAX_PROMPT_LENGTH:
+                    await message.channel.send(
+                        f"Your prompt is too long! Keep it under {MAX_PROMPT_LENGTH} characters.",
+                    )
                 else:
                     channel_id: int = message.channel.id
                     if channel_id not in self.cache:
@@ -225,7 +245,7 @@ class DizznemBot(commands.Bot):
 
                     cache: deque = self.cache[channel_id]
 
-                    async with message.channel.typing():
+                    async with self.ai_semaphore, message.channel.typing():
                         ai_response: str = await asyncio.to_thread(
                             get_ai_response,
                             prompt,
