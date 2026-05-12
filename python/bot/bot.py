@@ -52,6 +52,7 @@ class DizznemBot(commands.Bot):
         self.ai_api_key: str = cast("str", os.getenv("AI_API_KEY", ""))
         self.cache: dict[int, deque] = {}
         self.ai_cooldowns: dict[int, float] = {}
+        self.ai_semaphore: asyncio.Semaphore = asyncio.Semaphore(3)
 
     async def setup_hook(self) -> None:
         """Load all cogs and start autosave for database."""
@@ -238,7 +239,7 @@ class DizznemBot(commands.Bot):
 
                     cache: deque = self.cache[channel_id]
 
-                    async with message.channel.typing():
+                    async with self.ai_semaphore, message.channel.typing():
                         ai_response: str = await asyncio.to_thread(
                             get_ai_response,
                             prompt,
