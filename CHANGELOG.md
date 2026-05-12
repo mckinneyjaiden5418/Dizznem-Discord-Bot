@@ -5,7 +5,7 @@
 - Formatting of AI cooldown / cap messages.
 
 ## [2.1.1] - 2026-5-12
-### Changed
+### Added
 - Added per-user cooldown on AI chat to prevent spam.
 - Added global semaphore limiting concurrent AI API calls to 3.
     - In other words only 3 AI calls can be made at once, the rest waits in a queue.
