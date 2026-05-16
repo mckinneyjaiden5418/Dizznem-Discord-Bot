@@ -76,6 +76,60 @@ class Admin(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.hybrid_command(
+        name="resetcooldown",
+        description="Reset all cooldowns for a given command (admin command).",
+    )
+    async def reset_cooldown(
+        self,
+        ctx: commands.Context,
+        command_name: str,
+    ) -> None:
+        """Reset all cooldowns for a given command.
+
+        Args:
+            ctx (commands.Context): Context.
+            command_name (str): Command name to reset cooldowns for.
+        """
+        if ctx.author.id != self.bot.admin_id:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="You do not have access to this command.",
+                ),
+            )
+            return
+
+        cmd: commands.Command | None = self.bot.get_command(command_name)
+        if cmd is None:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description=f"Command **{command_name}** not found.",
+                ),
+            )
+            return
+
+        if cmd._buckets._cache:  # noqa: SLF001
+            cmd._buckets._cache.clear()  # noqa: SLF001
+            await ctx.send(
+                embed=Embed(
+                    title="✅ Cooldowns Reset",
+                    color=Color.green(),
+                    description=f"All cooldowns for **{command_name}** have been reset.",
+                ),
+            )
+        else:
+            await ctx.send(
+                embed=Embed(
+                    title="ℹ️ No Cooldowns",  # noqa: RUF001
+                    color=Color.blue(),
+                    description=f"**{command_name}** has no active cooldowns.",
+                ),
+            )
+
 
 async def setup(bot: DizznemBot) -> None:
     """Setup for Admin.
