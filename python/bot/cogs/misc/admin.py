@@ -26,6 +26,59 @@ class Admin(commands.Cog):
         self.bot: DizznemBot = bot
 
     @commands.hybrid_command(
+        name="addmoney",
+        description="Add money to a user's balance (admin command).",
+    )
+    async def add_money(
+        self,
+        ctx: commands.Context,
+        member: Member,
+        amount: str,
+    ) -> None:
+        """Add money to a user's balance.
+
+        Args:
+            ctx (commands.Context): Context.
+            member (Member): Member to add money to.
+            amount (str): Money amount to add.
+        """
+        if ctx.author.id != self.bot.admin_id:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="You do not have access to this command.",
+                ),
+            )
+            return
+
+        try:
+            amount_float: float = convert_money_str(money_str=amount)
+        except ValueError:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="Invalid money format.",
+                ),
+            )
+            return
+
+        user: User = User.create_if_not_exists(user_id=member.id, username=member.name)
+        user.money += amount_float
+
+        await ctx.send(
+            embed=Embed(
+                title="🏦",
+                color=Color.green(),
+                description=(
+                    f"Added **${format_number(amount_float)}** to **{member.display_name}**'s balance.\n"  # noqa: E501
+                    f"New balance: **${format_number(user.money)}**"
+                ),
+            ),
+        )
+
+    @commands.hybrid_command(
         name="setmoney",
         description="Set money for a user (admin command).",
     )
