@@ -26,6 +26,59 @@ class Admin(commands.Cog):
         self.bot: DizznemBot = bot
 
     @commands.hybrid_command(
+        name="addmoney",
+        description="Add money to a user's balance (admin command).",
+    )
+    async def add_money(
+        self,
+        ctx: commands.Context,
+        member: Member,
+        amount: str,
+    ) -> None:
+        """Add money to a user's balance.
+
+        Args:
+            ctx (commands.Context): Context.
+            member (Member): Member to add money to.
+            amount (str): Money amount to add.
+        """
+        if ctx.author.id != self.bot.admin_id:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="You do not have access to this command.",
+                ),
+            )
+            return
+
+        try:
+            amount_float: float = convert_money_str(money_str=amount)
+        except ValueError:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="Invalid money format.",
+                ),
+            )
+            return
+
+        user: User = User.create_if_not_exists(user_id=member.id, username=member.name)
+        user.money += amount_float
+
+        await ctx.send(
+            embed=Embed(
+                title="🏦",
+                color=Color.green(),
+                description=(
+                    f"Added **${format_number(amount_float)}** to **{member.display_name}**'s balance.\n"  # noqa: E501
+                    f"New balance: **${format_number(user.money)}**"
+                ),
+            ),
+        )
+
+    @commands.hybrid_command(
         name="setmoney",
         description="Set money for a user (admin command).",
     )
@@ -75,6 +128,60 @@ class Admin(commands.Cog):
         )
 
         await ctx.send(embed=embed)
+
+    @commands.hybrid_command(
+        name="resetcooldown",
+        description="Reset all cooldowns for a given command (admin command).",
+    )
+    async def reset_cooldown(
+        self,
+        ctx: commands.Context,
+        command_name: str,
+    ) -> None:
+        """Reset all cooldowns for a given command.
+
+        Args:
+            ctx (commands.Context): Context.
+            command_name (str): Command name to reset cooldowns for.
+        """
+        if ctx.author.id != self.bot.admin_id:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description="You do not have access to this command.",
+                ),
+            )
+            return
+
+        cmd: commands.Command | None = self.bot.get_command(command_name)
+        if cmd is None:
+            await ctx.send(
+                embed=Embed(
+                    title="Error",
+                    color=Color.red(),
+                    description=f"Command **{command_name}** not found.",
+                ),
+            )
+            return
+
+        if cmd._buckets._cache:  # noqa: SLF001
+            cmd._buckets._cache.clear()  # noqa: SLF001
+            await ctx.send(
+                embed=Embed(
+                    title="✅ Cooldowns Reset",
+                    color=Color.green(),
+                    description=f"All cooldowns for **{command_name}** have been reset.",
+                ),
+            )
+        else:
+            await ctx.send(
+                embed=Embed(
+                    title="ℹ️ No Cooldowns",  # noqa: RUF001
+                    color=Color.blue(),
+                    description=f"**{command_name}** has no active cooldowns.",
+                ),
+            )
 
 
 async def setup(bot: DizznemBot) -> None:
