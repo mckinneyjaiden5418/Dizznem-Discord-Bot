@@ -11,7 +11,7 @@ from discord import Color, Embed, Member
 from discord.ext import commands
 from log import logger  # noqa: F401
 from user import User
-from utils.numbers import convert_money_str
+from utils.numbers import convert_money_str, format_number
 
 
 class Admin(commands.Cog):
@@ -26,10 +26,14 @@ class Admin(commands.Cog):
         self.bot: DizznemBot = bot
 
     @commands.hybrid_command(
-        name="setmoney", description="Set money for a user (admin command).",
+        name="setmoney",
+        description="Set money for a user (admin command).",
     )
     async def set_money(
-        self, ctx: commands.Context, member: Member, amount: str,
+        self,
+        ctx: commands.Context,
+        member: Member,
+        amount: str,
     ) -> None:
         """Set money for a user.
 
@@ -62,10 +66,12 @@ class Admin(commands.Cog):
         user: User = User.create_if_not_exists(user_id=member.id, username=member.name)
         user.money = amount_float
 
+        formatted_amount: str = format_number(amount_float)
+
         embed: Embed = Embed(
             title="🏦",
             color=Color.green(),
-            description=f"Set **{member.display_name}**'s balance to **${amount_float:.2f}**.",
+            description=f"Set **{member.display_name}**'s balance to **${formatted_amount}**.",
         )
 
         await ctx.send(embed=embed)
