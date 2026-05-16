@@ -4,6 +4,9 @@
 ### Changed
 - Formatting of AI cooldown / cap messages.
 
+### Fixed
+- $setmoney formatting (admin command).
+
 ## [2.1.1] - 2026-5-12
 ### Added
 - Per-user cooldown on AI chat to prevent spam.
