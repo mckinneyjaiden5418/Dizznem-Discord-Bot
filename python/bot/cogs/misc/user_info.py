@@ -26,6 +26,17 @@ class UserInfo(commands.Cog):
         """
         self.bot: commands.Bot = bot
 
+    def messages_for_level(self, level: int) -> float:
+        """Total messages required to reach a given level.
+
+        Args:
+            level (int): Level to calculate messages for.
+
+        Returns:
+            float: Total messages required to reach the level.
+        """
+        return 2 * (level**2) + (50 * level) + 100
+
     @commands.hybrid_command(
         name="level",
         description="Get your level and related information",
@@ -48,11 +59,18 @@ class UserInfo(commands.Cog):
 
         level: int = user.level
         message_count: int = user.message_count
-        required_messages: float = 2 * (level**2) + (50 * level) + 100
         level_rank: int | None = get_level_rank(USERS_DB_PATH, user_id)
         rank_display: str = f"**#{level_rank}**" if level_rank else "**Unranked**"
 
-        progress_percent: float = min(message_count / required_messages, 1)
+        total_for_current: float = self.messages_for_level(level - 1)
+        total_for_next: float = self.messages_for_level(level)
+        messages_into_level: float = message_count - total_for_current
+        messages_needed_this_level: float = total_for_next - total_for_current
+
+        progress_percent: float = min(
+            messages_into_level / messages_needed_this_level,
+            1.0,
+        )
         progress_bar_length: int = 20
         filled_blocks: int = int(progress_percent * progress_bar_length)
         empty_blocks: int = progress_bar_length - filled_blocks
@@ -79,8 +97,11 @@ class UserInfo(commands.Cog):
             inline=True,
         )
         embed.add_field(
-            name="🚀 Messages Required for Next Level",
-            value=f"**{format_number(number=required_messages)}**",
+            name="🚀 Progress to Next Level",
+            value=(
+                f"**{format_number(number=messages_into_level)}**"
+                f" / **{format_number(number=messages_needed_this_level)}** messages"
+            ),
             inline=False,
         )
         embed.add_field(
@@ -117,8 +138,15 @@ class UserInfo(commands.Cog):
 
         level: int = user.level
         message_count: int = user.message_count
-        required_messages: float = 2 * (level**2) + (50 * level) + 100
-        progress_percent: float = min(message_count / required_messages, 1)
+
+        total_for_current: float = self.messages_for_level(level - 1)
+        total_for_next: float = self.messages_for_level(level)
+        messages_into_level: float = message_count - total_for_current
+        messages_needed_this_level: float = total_for_next - total_for_current
+
+        progress_percent: float = min(
+            messages_into_level / messages_needed_this_level, 1.0,
+        )
         progress_bar_length: int = 20
         filled_blocks: int = int(progress_percent * progress_bar_length)
         progress_bar: str = "█" * filled_blocks + "░" * (
@@ -151,7 +179,6 @@ class UserInfo(commands.Cog):
             value=f"**{format_number(level)}**",
             inline=True,
         )
-
         embed.add_field(
             name="💬 Messages",
             value=f"**{format_number(message_count)}**",
@@ -159,7 +186,7 @@ class UserInfo(commands.Cog):
         )
         embed.add_field(
             name="🚀 Next Level In",
-            value=f"**{format_number(required_messages - message_count)} messages**",
+            value=f"**{format_number(messages_needed_this_level - messages_into_level)} messages**",
             inline=True,
         )
         embed.add_field(
@@ -167,7 +194,6 @@ class UserInfo(commands.Cog):
             value=f"{progress_bar} **{int(progress_percent * 100)}%**",
             inline=False,
         )
-
         embed.add_field(
             name="💰 Balance",
             value=f"**${format_number(balance)}**",
@@ -183,7 +209,6 @@ class UserInfo(commands.Cog):
             value=f"**${format_number(total_networth)}**",
             inline=True,
         )
-
         embed.add_field(
             name="🏆 Server Rankings",
             value=(
@@ -194,7 +219,6 @@ class UserInfo(commands.Cog):
             ),
             inline=False,
         )
-
         embed.set_footer(text=f"User ID: {user_id}")
         await ctx.send(embed=embed)
 
