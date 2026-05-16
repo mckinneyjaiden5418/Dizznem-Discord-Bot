@@ -1,6 +1,6 @@
 # Dizznem Bot Changelog
 
-## [2.1.2] - 2026-5-12
+## [2.1.2] - 2026-XX-XX
 ### Changed
 - Formatting of AI cooldown / cap messages.
 
