@@ -3,6 +3,7 @@
 ## [2.1.2] - 2026-XX-XX
 ### Changed
 - Formatting of AI cooldown / cap messages.
+- Level presentation for both $level and $profile.
 
 ### Fixed
 - $setmoney formatting (admin command).
