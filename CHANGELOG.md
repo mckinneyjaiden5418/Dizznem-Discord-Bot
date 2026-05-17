@@ -7,6 +7,7 @@
     - $resetcooldown (resets cooldowns, e.g. $daily and $weekly).
 
 ### Changed
+- Balance embed to look better.
 - Formatting of AI cooldown / cap messages.
 - Level presentation for both $level and $profile.
 
