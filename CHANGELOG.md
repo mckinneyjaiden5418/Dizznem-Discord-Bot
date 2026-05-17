@@ -1,7 +1,7 @@
 # Dizznem Bot Changelog
 
 ## [2.1.2] - 2026-XX-XX
-## Added
+### Added
 - New admin commands.
     - $addmoney (adds money to a user).
     - $resetcooldown (resets cooldowns, e.g. $daily and $weekly).
