@@ -29,7 +29,7 @@ class Money(commands.Cog):
         description="Get your balance",
         aliases=["bal"],
     )
-    async def balance(self, ctx: commands.Context, member: Member | None) -> None:
+    async def balance(self, ctx: commands.Context, member: Member | None = None) -> None:
         """Balance command.
 
         Args:
@@ -39,17 +39,19 @@ class Money(commands.Cog):
         user_id: int = member.id if member else ctx.author.id
         username: str = member.name if member else ctx.author.name
         display_name: str = member.display_name if member else ctx.author.display_name
-        avatar: Asset | None = member.avatar if member else ctx.author.avatar
+        avatar_url: str = (
+            member.display_avatar.url if member else ctx.author.display_avatar.url
+        )
+
         user: User = User.create_if_not_exists(user_id=user_id, username=username)
-        user_money: str = format_number(number=user.money)
 
         embed: Embed = Embed(
-            title="Balance",
+            title=f"💰 {display_name}'s Balance",
             color=Color.og_blurple(),
-            description=f"${user_money}",
+            description=f"## ${format_number(user.money)}",
         )
-        embed.set_author(name=display_name, icon_url=avatar)
-
+        embed.set_thumbnail(url=avatar_url)
+        embed.set_footer(text=f"User ID: {user_id}")
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(
